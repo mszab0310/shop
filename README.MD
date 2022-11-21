@@ -13,4 +13,4 @@ To run this application:
 - Start the client application - first install all the required modules with `npm install ` and then run it with `npm start`
 
 Notes:
-This application was developed for a university project, it is not meant to be used in any commercial environment. Any simmilarities with existing applications that serve a simmilar purpose is just the result of a series of adventitious google searches.
+This application was developed as a university project, it is not meant to be used in any commercial environment. Any similarities with existing applications that serve a simmilar purpose is just the result of a series of adventitious google searches.
