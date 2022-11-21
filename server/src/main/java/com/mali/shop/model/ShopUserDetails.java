@@ -1,4 +1,4 @@
-package com.mali.shop.security;
+package com.mali.shop.model;
 
 import com.mali.shop.model.User;
 import org.springframework.security.core.GrantedAuthority;

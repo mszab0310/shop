@@ -2,7 +2,7 @@ package com.mali.shop.service;
 
 import com.mali.shop.model.User;
 import com.mali.shop.repository.UserRepository;
-import com.mali.shop.security.ShopUserDetails;
+import com.mali.shop.model.ShopUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,10 +17,10 @@ public class ShopUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findUserByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findUserByUserName(username);
 
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + email));
+        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + username));
 
         return user.map(ShopUserDetails::new).get();
     }
