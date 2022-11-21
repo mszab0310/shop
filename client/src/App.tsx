@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import LoginPage from "./pages/Login/LoginPage";
+import LoginPage from "./pages/auth/LoginPage";
 import { NavigationRoutes } from "./routes/ROUTES";
 import HomePage from "./pages/home/HomePage";
-import Register from "./pages/Login/Register";
+import Register from "./pages/auth/Register";
 
 function App() {
   return (
