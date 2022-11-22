@@ -10,7 +10,7 @@ In order to run this application you will need:
 To run this application:
 
 - Start the server application - make sure nothing else is running on _localhost:8080_ or configure it from the _application.yaml_ file to run on another port (make sure to change it in the client proxy as well)
-- Start the client application - first install all the required modules with `npm install ` and then run it with `npm start`
+- Start the client application - first install all the required modules with `npm install` and then run it with `npm start`
 
 Notes:
 This application was developed as a university project, it is not meant to be used in any commercial environment. Any similarities with existing applications that serve a simmilar purpose is just the result of a series of adventitious google searches.
