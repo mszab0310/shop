@@ -1,4 +1,4 @@
-package com.mali.shop.model;
+package com.mali.shop.dto;
 
 import lombok.Data;
 
