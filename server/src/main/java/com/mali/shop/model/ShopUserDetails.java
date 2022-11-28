@@ -12,14 +12,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShopUserDetails implements UserDetails {
-    private String userName;
+    private String firstName;
+    private String lastName;
     private String password;
     private String email;
     private boolean active;
     private List<GrantedAuthority> authorities;
 
     public ShopUserDetails(User user) {
-        this.userName = user.getUserName();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.password = user.getPassword();
         this.email = user.getEmail();
         this.active = user.isActive();
@@ -40,7 +42,7 @@ public class ShopUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return firstName + lastName;
     }
 
     @Override

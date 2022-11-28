@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,6 +10,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
   return (
@@ -29,13 +30,32 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function Register() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+  const [requestStatusMessage, setRequestStatusMessage] = useState<string | undefined>(undefined);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = data.get("email");
+    const firstName = data.get("firstName");
+    const lastName = data.get("lastName");
+    const password = data.get("password");
+    await axios
+      .post(
+        "/register",
+        { email: email, firstName: firstName, lastName: lastName, password: password },
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      )
+      .then(() => {
+        setRequestStatusMessage("Account created successfully!");
+        setTimeout(() => {
+          navigate("/");
+        }, 5000);
+      });
   };
 
   return (
@@ -55,6 +75,9 @@ export default function Register() {
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
+          </Typography>
+          <Typography component="h2" variant="h6">
+            {requestStatusMessage}
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -76,7 +99,7 @@ export default function Register() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

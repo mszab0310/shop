@@ -20,10 +20,10 @@ public class ShopUserDetailsService implements UserDetailsService {
     private UserPasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findUserByUserName(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findUserByEmail(email);
 
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + username));
+        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + email));
 
         return user.map(ShopUserDetails::new).get();
     }
@@ -31,6 +31,7 @@ public class ShopUserDetailsService implements UserDetailsService {
     public void saveUser(String email, String firstName, String lastName, String password){
         String encryptedPassword = passwordEncoder.encode(password);
         User user = new User(email,firstName,lastName,encryptedPassword);
+        user.setActive(true);
         userRepository.save(user);
     }
 }
