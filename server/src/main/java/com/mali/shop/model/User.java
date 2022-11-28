@@ -13,11 +13,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String userName;
+    private String firstName;
+    private String lastName;
     private String password;
     private String email;
     private boolean active;
     private String roles;
 
+    public User(String email, String firstName,String lastName, String password){
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
 
 }
