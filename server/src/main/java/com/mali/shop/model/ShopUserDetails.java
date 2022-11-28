@@ -1,15 +1,11 @@
 package com.mali.shop.model;
 
-import com.mali.shop.model.User;
 import org.springframework.security.core.GrantedAuthority;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class ShopUserDetails implements UserDetails {
     private String firstName;
@@ -17,7 +13,7 @@ public class ShopUserDetails implements UserDetails {
     private String password;
     private String email;
     private boolean active;
-    private List<GrantedAuthority> authorities;
+    private Set<GrantedAuthority> authorities;
 
     public ShopUserDetails(User user) {
         this.firstName = user.getFirstName();
@@ -25,9 +21,7 @@ public class ShopUserDetails implements UserDetails {
         this.password = user.getPassword();
         this.email = user.getEmail();
         this.active = user.isActive();
-        this.authorities = Arrays.stream(user.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        user.getRoles().forEach(role -> { this.authorities.add(new SimpleGrantedAuthority(role.toString()));});
     }
 
     @Override

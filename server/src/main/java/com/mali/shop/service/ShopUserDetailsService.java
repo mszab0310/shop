@@ -34,14 +34,18 @@ public class ShopUserDetailsService implements UserDetailsService {
         return user.map(ShopUserDetails::new).get();
     }
 
-    public void saveUser(String email, String firstName, String lastName, String password){
+    public void saveUser(String email, String firstName, String lastName, String password) {
         String encryptedPassword = passwordEncoder.encode(password);
-        User user = new User(email,firstName,lastName,encryptedPassword);
+        User user = new User(email, firstName, lastName, encryptedPassword);
         user.setActive(true);
         userRepository.save(user);
     }
 
-    private Collection< ? extends GrantedAuthority> mapRolesToAuthorities(Set<Role> roles){
+    public boolean checkIfUserExistsByEmail(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
+    }
+
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 }
