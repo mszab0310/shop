@@ -1,5 +1,6 @@
 package com.mali.shop.service;
 
+import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.Role;
 import com.mali.shop.model.ShopUserDetails;
 import com.mali.shop.model.User;
@@ -25,14 +26,12 @@ public class ShopUserDetailsService implements UserDetailsService {
     @Autowired
     private UserPasswordEncoder passwordEncoder;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByEmail(String email) throws UserException {
         Optional<User> user = userRepository.findUserByEmail(email);
-
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + email));
-
+        user.orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND + email));
         return user.map(ShopUserDetails::new).get();
     }
+
 
     public void saveUser(String email, String firstName, String lastName, String password) {
         String encryptedPassword = passwordEncoder.encode(password);
@@ -47,5 +46,10 @@ public class ShopUserDetailsService implements UserDetailsService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
     }
 }
