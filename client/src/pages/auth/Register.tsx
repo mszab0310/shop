@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { NavigationRoutes } from "../../routes/ROUTES";
 
 function Copyright(props: any) {
   return (
@@ -37,13 +38,14 @@ export default function Register() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
+    const username = data.get("username");
     const firstName = data.get("firstName");
     const lastName = data.get("lastName");
     const password = data.get("password");
     await axios
       .post(
         "/register",
-        { email: email, firstName: firstName, lastName: lastName, password: password },
+        { email: email, username: username, firstName: firstName, lastName: lastName, password: password },
         {
           headers: {
             "content-type": "application/json",
@@ -54,7 +56,7 @@ export default function Register() {
         setRequestStatusMessage("Account created successfully!");
         setTimeout(() => {
           navigate("/");
-        }, 5000);
+        }, 2500);
       });
   };
 
@@ -88,6 +90,9 @@ export default function Register() {
                 <TextField required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="family-name" />
               </Grid>
               <Grid item xs={12}>
+                <TextField required fullWidth id="username" label="Username" name="username" autoComplete="username" />
+              </Grid>
+              <Grid item xs={12}>
                 <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
               </Grid>
               <Grid item xs={12}>
@@ -99,7 +104,7 @@ export default function Register() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/" variant="body2">
+                <Link href={NavigationRoutes.LOGIN} variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
