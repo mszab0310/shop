@@ -1,4 +1,4 @@
-package com.mali.shop.security;
+package com.mali.shop.filter;
 
 import com.mali.shop.service.ShopUserDetailsService;
 import com.mali.shop.util.JWTUtil;
