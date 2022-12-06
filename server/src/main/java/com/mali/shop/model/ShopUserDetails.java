@@ -1,5 +1,6 @@
 package com.mali.shop.model;
 
+import com.mali.shop.enums.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,5 +54,12 @@ public class ShopUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return user.isActive();
+    }
+
+    public String getEmail(){
+        return user.getEmail();
+    }
+    public Set<Role> getRoles(){
+        return user.getRoles();
     }
 }

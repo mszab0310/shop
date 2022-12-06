@@ -1,6 +1,8 @@
 package com.mali.shop.service;
 
+import com.mali.shop.dto.JwtDTO;
 import com.mali.shop.dto.RegisterUserDTO;
+import com.mali.shop.dto.SigninDTO;
 import com.mali.shop.enums.Roles;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.Role;
@@ -9,13 +11,20 @@ import com.mali.shop.model.User;
 import com.mali.shop.repository.RoleRepository;
 import com.mali.shop.repository.UserRepository;
 import com.mali.shop.security.UserPasswordEncoder;
+import com.mali.shop.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ShopUserDetailsService implements UserDetailsService {
@@ -27,6 +36,12 @@ public class ShopUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     @Override
@@ -52,6 +67,19 @@ public class ShopUserDetailsService implements UserDetailsService {
             user.setRoles(Collections.singleton(userRole));
             userRepository.save(user);
         }
-
     }
+
+    public JwtDTO doSignin(SigninDTO signinDTO){
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(),signinDTO.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtil.generateJwtToken(authentication);
+        ShopUserDetails userDetails = (ShopUserDetails) authentication.getPrincipal();
+        List<String> roles = userDetails.getRoles().stream().map(Role::getName).collect(Collectors.toList());
+        JwtDTO response = new JwtDTO();
+        response.setToken(jwt);
+        response.setEmail(userDetails.getEmail());
+        response.setRoles(roles);
+        return response;
+    }
+
 }

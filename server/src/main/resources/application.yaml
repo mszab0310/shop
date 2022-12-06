@@ -20,3 +20,7 @@ logging:
     org:
       springframework:
           security: DEBUG
+
+jwt:
+  secret: "128fks?:)}{><?XZ@#$!AF#@%1asdag"
+  expirationTime: 86400000
