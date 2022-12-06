@@ -1,5 +1,6 @@
 package com.mali.shop.model;
 
+import com.mali.shop.enums.RoleEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column
+    private RoleEnum name;
 
 }

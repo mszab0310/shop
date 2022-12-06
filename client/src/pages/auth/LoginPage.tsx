@@ -38,15 +38,17 @@ export default function LoginPage() {
     const data = new FormData(event.currentTarget);
     const username = data.get("username");
     const password = data.get("password");
-    let formBody = new FormData();
-    formBody.append("username", username!);
-    formBody.append("password", password!);
+
     axios
-      .post("/login", formBody, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .post(
+        "/api/auth/signin",
+        { username: username, password: password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res: any) => {
         navigate("/home");
       })
