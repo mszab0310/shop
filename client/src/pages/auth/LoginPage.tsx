@@ -50,6 +50,8 @@ export default function LoginPage() {
         }
       )
       .then((res: any) => {
+        const token = res.data.token;
+        localStorage.setItem("jwt", token);
         navigate("/home");
       })
       .catch((err) => {

@@ -68,14 +68,19 @@ public class AuthService {
         log.info("Trying to sign in user with username {}", signinDTO.getUsername());
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(),signinDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         String jwt = jwtUtil.generateJwtToken(authentication);
+
         ShopUserDetails userDetails = (ShopUserDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+
         JwtDTO response = new JwtDTO();
         response.setToken(jwt);
         response.setEmail(userDetails.getEmail());
+        response.setUsername(userDetails.getUsername());
         response.setRoles(roles);
         log.info("User signed in with username {}", userDetails.getUsername());
+
         return response;
     }
 }
