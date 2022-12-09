@@ -1,5 +1,5 @@
 export enum NavigationRoutes {
-  LOGIN = "/login",
+  LOGIN = "/",
   HOME = "/home",
   REGISTER = "/register",
 }
