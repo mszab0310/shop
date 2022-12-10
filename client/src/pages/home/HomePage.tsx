@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Navbar from "./../../components/Navbar/Navbar";
 
 function HomePage() {
   const [data, setData] = useState<string>("");
@@ -18,6 +19,7 @@ function HomePage() {
   };
   return (
     <div>
+      <Navbar />
       <button onClick={getResource}>CLIK ME MF</button>
       <div>HomePage + {data}</div>
     </div>

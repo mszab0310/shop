@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { useState } from "react";
-import LoginPage from "../auth/Login";
-import HomePage from "../home/HomePage";
+import { useNavigate } from "react-router-dom";
+import { NavigationRoutes } from "../../routes/ROUTES";
 const jwt = require("jsonwebtoken");
 function LoginRenderer() {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const navigate = useNavigate();
   //checks wheter the jw token stored on local storage is still active or not
   useEffect(() => {
     console.log("verifying jwt");
@@ -14,13 +13,14 @@ function LoginRenderer() {
       var dateNow = new Date();
       //if token expiry time is in the past set login state to false and remove token
       if (decodedToken.exp < dateNow.getTime()) {
-        setIsLogin(false);
         localStorage.removeItem("jwt");
-      } else setIsLogin(true);
-    }
+        navigate(NavigationRoutes.LOGIN);
+      } else navigate(NavigationRoutes.HOME);
+    } else navigate(NavigationRoutes.LOGIN);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <div>{isLogin ? <HomePage /> : <LoginPage />}</div>;
+  return <></>;
 }
 
 export default LoginRenderer;
