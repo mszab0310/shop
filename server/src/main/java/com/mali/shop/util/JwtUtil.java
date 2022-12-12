@@ -1,6 +1,5 @@
 package com.mali.shop.util;
 
-import com.mali.shop.model.ShopUserDetails;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

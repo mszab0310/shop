@@ -6,7 +6,7 @@ import com.mali.shop.dto.SigninDTO;
 import com.mali.shop.enums.RoleEnum;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.Role;
-import com.mali.shop.model.ShopUserDetails;
+import com.mali.shop.util.ShopUserDetails;
 import com.mali.shop.model.User;
 import com.mali.shop.repository.RoleRepository;
 import com.mali.shop.repository.UserRepository;

@@ -1,12 +1,11 @@
 package com.mali.shop.filter;
 
-import com.mali.shop.model.ShopUserDetails;
+import com.mali.shop.util.ShopUserDetails;
 import com.mali.shop.service.ShopUserDetailsService;
 import com.mali.shop.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

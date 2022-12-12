@@ -1,10 +1,8 @@
 package com.mali.shop.service;
 
-import com.mali.shop.model.ShopUserDetails;
+import com.mali.shop.util.ShopUserDetails;
 import com.mali.shop.model.User;
-import com.mali.shop.repository.RoleRepository;
 import com.mali.shop.repository.UserRepository;
-import com.mali.shop.security.UserPasswordEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
