@@ -21,7 +21,7 @@ function HomePage() {
 
   const saveListing = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData();
+    const formData = new FormData(event.currentTarget);
     const token = localStorage.getItem("jwt");
     const header = "Bearer " + token;
     const name = formData.get("productName");
