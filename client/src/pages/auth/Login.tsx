@@ -14,6 +14,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { UserData } from "../../dto/UserData";
+import { read } from "fs";
 
 function Copyright(props: any) {
   return (
@@ -41,7 +43,7 @@ export default function LoginPage() {
 
     axios
       .post(
-        "/api/auth/signin",
+        "http://localhost:8080/api/auth/signin",
         { username: username, password: password },
         {
           headers: {
@@ -51,6 +53,9 @@ export default function LoginPage() {
       )
       .then((res: any) => {
         const token = res.data.token;
+        const userData: UserData = {email: res.data.email, roles: res.data.roles,token: res.data.token,username:res.data.username};
+        localStorage.setItem("userData",JSON.stringify(userData));
+
         localStorage.setItem("jwt", token);
         navigate("/home");
       })

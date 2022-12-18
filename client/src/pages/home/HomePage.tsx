@@ -9,7 +9,7 @@ function HomePage() {
     const token = localStorage.getItem("jwt");
     const header = "Bearer " + token;
     await axios
-      .get("/resource", {
+      .get("http://localhost:8080/resource", {
         headers: {
           Authorization: header,
         },
@@ -29,7 +29,7 @@ function HomePage() {
     const price = formData.get("productPrice");
     axios
       .post(
-        "/api/private/products/new",
+        "http://localhost:8080/api/private/products/new",
         { name: name, description: desrpition, startingPrice: price },
         {
           headers: {

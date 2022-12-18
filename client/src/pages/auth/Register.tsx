@@ -44,7 +44,7 @@ export default function Register() {
     const password = data.get("password");
     await axios
       .post(
-        "/api/auth/register",
+        "http://localhost:8080/api/auth/register",
         { email: email, username: username, firstName: firstName, lastName: lastName, password: password },
         {
           headers: {
