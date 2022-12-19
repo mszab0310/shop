@@ -1,6 +1,6 @@
 export type UserData = {
   username: string;
   firstname: string;
-  lastname: string;
+  lastName: string;
   email: string;
 };

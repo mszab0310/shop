@@ -16,7 +16,7 @@ function App() {
         <Route path={NavigationRoutes.REGISTER} element={<Register />} />
         <Route path={NavigationRoutes.HOME} element={<HomePage />} />
         <Route path={NavigationRoutes.PRODUCT} element={<ProductPage />} />
-        <Route path={NavigationRoutes.USER + "/:username"} element={<UserPage />} />
+        <Route path={NavigationRoutes.USER} element={<UserPage />} />
       </Routes>
     </div>
   );

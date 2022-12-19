@@ -15,8 +15,12 @@ function LoginRenderer() {
       if (decodedToken.exp < dateNow.getTime()) {
         localStorage.removeItem("jwt");
         navigate(NavigationRoutes.LOGIN);
-      } else navigate(NavigationRoutes.HOME);
-    } else navigate(NavigationRoutes.LOGIN);
+      } else {
+        navigate(NavigationRoutes.HOME);
+      }
+    } else {
+      navigate(NavigationRoutes.LOGIN);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

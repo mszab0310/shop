@@ -17,7 +17,6 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { NavigationRoutes } from "../../routes/ROUTES";
-import { decodeDataFromJwt } from "../../helpers/AuthHelpers";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -80,8 +79,17 @@ export default function Navbar() {
     handleMobileMenuClose();
   };
 
+  const handleClickProfile = () => {
+    handleMenuClose();
+    navigate(NavigationRoutes.USER);
+  };
+
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const navigateToHome = () => {
+    navigate(NavigationRoutes.HOME);
   };
 
   const menuId = "primary-search-account-menu";
@@ -101,7 +109,7 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
   );
@@ -161,8 +169,8 @@ export default function Navbar() {
           <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
-            MUI
+          <Typography onClick={navigateToHome} variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
+            Ebay
           </Typography>
           <Search>
             <SearchIconWrapper>
