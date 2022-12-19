@@ -3,6 +3,7 @@ package com.mali.shop.service;
 import com.mali.shop.dto.JwtDTO;
 import com.mali.shop.dto.RegisterUserDTO;
 import com.mali.shop.dto.SigninDTO;
+import com.mali.shop.dto.UserDataDto;
 import com.mali.shop.enums.RoleEnum;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.Role;
@@ -43,14 +44,14 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
     public void registerUser(RegisterUserDTO newUser) throws UserException {
-        log.info("Trying to register user with email {} and username {}", newUser.getEmail(),newUser.getUsername());
-        if(userRepository.existsByEmail(newUser.getEmail())){
+        log.info("Trying to register user with email {} and username {}", newUser.getEmail(), newUser.getUsername());
+        if (userRepository.existsByEmail(newUser.getEmail())) {
             log.error(UserException.EMAIL_TAKEN + newUser.getEmail());
             throw new UserException(UserException.EMAIL_TAKEN + newUser.getEmail());
-        }else if(userRepository.existsByUsername(newUser.getUsername())){
+        } else if (userRepository.existsByUsername(newUser.getUsername())) {
             log.error(UserException.USERNAME_TAKEN + newUser.getUsername());
             throw new UserException(UserException.USERNAME_TAKEN + newUser.getUsername());
-        }else {
+        } else {
             User user = new User();
             user.setEmail(newUser.getEmail());
             user.setUsername(newUser.getUsername());
@@ -61,12 +62,13 @@ public class AuthService {
             Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER);
             user.setRoles(Collections.singleton(userRole));
             userRepository.save(user);
-            log.info("User registered with email {} and username {}", user.getEmail(),user.getUsername());
+            log.info("User registered with email {} and username {}", user.getEmail(), user.getUsername());
         }
     }
-    public JwtDTO doSignin(SigninDTO signinDTO){
+
+    public JwtDTO doSignin(SigninDTO signinDTO) {
         log.info("Trying to sign in user with username {}", signinDTO.getUsername());
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(),signinDTO.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(), signinDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtUtil.generateJwtToken(authentication);
@@ -82,5 +84,15 @@ public class AuthService {
         log.info("User signed in with username {}", userDetails.getUsername());
 
         return response;
+    }
+
+    public UserDataDto getCurrentUserData() {
+        UserDataDto userDataDto = new UserDataDto();
+        ShopUserDetails userDetails = (ShopUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userDataDto.setFirstname(userDetails.getFirstName());
+        userDataDto.setLastName(userDetails.getLastName());
+        userDataDto.setUsername(userDetails.getUsername());
+        userDataDto.setEmail(userDetails.getEmail());
+        return userDataDto;
     }
 }

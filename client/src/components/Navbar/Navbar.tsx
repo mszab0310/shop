@@ -15,7 +15,9 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { NavigationRoutes } from "../../routes/ROUTES";
+import { decodeDataFromJwt } from "../../helpers/AuthHelpers";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,11 +66,9 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem("userData")!)
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-    navigate("/user:" + userData.username);
   };
 
   const handleMobileMenuClose = () => {
@@ -78,7 +78,6 @@ export default function Navbar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
-    
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {

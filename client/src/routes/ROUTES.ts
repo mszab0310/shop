@@ -4,5 +4,5 @@ export enum NavigationRoutes {
   HOME = "/home",
   REGISTER = "/register",
   PRODUCT = "/product",
-  USER="/user"
+  USER = "/user",
 }

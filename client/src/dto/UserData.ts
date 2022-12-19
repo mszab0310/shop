@@ -1,6 +1,6 @@
-
 export type UserData = {
-    email: string,
-    token: string,
-    username: string,
-}
+  username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+};

@@ -4,14 +4,12 @@ package com.mali.shop.controller;
 import com.mali.shop.dto.JwtDTO;
 import com.mali.shop.dto.RegisterUserDTO;
 import com.mali.shop.dto.SigninDTO;
+import com.mali.shop.dto.UserDataDto;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -29,5 +27,10 @@ public class AuthenticationController {
     @PostMapping(value = "/signin", consumes = "application/json")
     public JwtDTO signIn(@RequestBody SigninDTO signinDTO){
         return authService.doSignin(signinDTO);
+    }
+
+    @GetMapping("/current")
+    public UserDataDto getCurrentUserDetails(){
+        return authService.getCurrentUserData();
     }
 }

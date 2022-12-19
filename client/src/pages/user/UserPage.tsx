@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { UserData } from "../../dto/UserData";
+import { getCurrentUser } from "./userApi";
 
 function UserPage() {
-  const userData = JSON.parse(localStorage.getItem("userData")!);
+  const [userdata, setUserData] = useState<UserData>();
 
-  return <div>
-    <h1>{userData.username}</h1>
-  </div>;
+  useEffect(() => {
+    getCurrentUser().then((resp) => {
+      console.log(resp.data);
+      setUserData(resp.data);
+    });
+  }, []);
+
+  return (
+    <div>
+      <h1>User</h1>
+    </div>
+  );
 }
 
 export default UserPage;
