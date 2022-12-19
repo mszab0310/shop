@@ -1,13 +1,12 @@
 package com.mali.shop.service;
 
 import com.mali.shop.dto.ProductDTO;
-import com.mali.shop.model.Product;
+import com.mali.shop.model.product.Product;
 import com.mali.shop.repository.ProductRepository;
 import com.mali.shop.util.ShopUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
