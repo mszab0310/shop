@@ -53,7 +53,7 @@ export default function LoginPage() {
       )
       .then((res: any) => {
         const token = res.data.token;
-        const userData: UserData = {email: res.data.email, roles: res.data.roles,token: res.data.token,username:res.data.username};
+        const userData: UserData = {email: res.data.email,token: res.data.token,username:res.data.username};
         localStorage.setItem("userData",JSON.stringify(userData));
 
         localStorage.setItem("jwt", token);
