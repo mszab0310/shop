@@ -17,6 +17,7 @@ public class Product {
 
     private String name;
     private String description;
+    private String productCondition;
     private BigDecimal startingPrice;
     private BigDecimal highestBid;
 
@@ -29,8 +30,6 @@ public class Product {
     private Date listedAtDate;
     private Date biddingClosesOn;
     private boolean isActive;
-
-
 
 
     @JoinColumn(name="seller_id", insertable = false, updatable = false)

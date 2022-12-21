@@ -52,7 +52,12 @@ public class ProductService {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
+        productDTO.setProductCondition(product.getProductCondition());
         productDTO.setStartingPrice(product.getStartingPrice());
+        productDTO.setHighestBid(product.getHighestBid());
+        productDTO.setListedAt(product.getListedAtDate());
+        productDTO.setListedAt(product.getBiddingClosesOn());
+        productDTO.setIsActive(product.isActive());
         return productDTO;
      }
 }
