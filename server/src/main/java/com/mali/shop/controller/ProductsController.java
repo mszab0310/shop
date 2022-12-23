@@ -1,6 +1,7 @@
 package com.mali.shop.controller;
 
 import com.mali.shop.dto.ProductDTO;
+import com.mali.shop.enums.ProductCondition;
 import com.mali.shop.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,13 @@ public class ProductsController {
 
     @GetMapping("/api/public/products")
     public List<ProductDTO> getAllProducts(){
+        log.info("Fetchin all products");
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/api/private/products/new/condition")
+    public List<String> getConditions(){
+        log.info("Fetching product condtion types");
+        return ProductCondition.getProductConditions();
     }
 }

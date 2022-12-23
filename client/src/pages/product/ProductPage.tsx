@@ -17,7 +17,7 @@ function ProductPage() {
     getAllProducts().then((response: any) => {
       response.data.forEach((element) => {
         console.log(element);
-        products.push({ name: element.name, description: element.description, price: element.price });
+        // products.push({ name: element.name, description: element.description, startingPrice: element.startingPrice });
       });
       setProductList(products);
       setIsLoading(true);
