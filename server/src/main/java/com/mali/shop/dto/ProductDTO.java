@@ -15,5 +15,5 @@ public class ProductDTO {
     private Date listedAt;
     private Date biddingClosesOn;
     private Boolean isActive;
-
+    private UserDataDto sellerData;
 }

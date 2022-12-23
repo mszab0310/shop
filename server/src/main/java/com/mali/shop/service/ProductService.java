@@ -1,10 +1,15 @@
 package com.mali.shop.service;
 
 import com.mali.shop.dto.ProductDTO;
+import com.mali.shop.dto.UserDataDto;
+import com.mali.shop.exceptions.UserException;
+import com.mali.shop.model.User;
 import com.mali.shop.model.product.Product;
 import com.mali.shop.repository.ProductRepository;
+import com.mali.shop.repository.UserRepository;
 import com.mali.shop.util.ShopUserDetails;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,8 +24,11 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public void addProduct(ProductDTO newProduct){
-        // maybe do some checks if product name/description is SFW/appropiate
+        // maybe do some checks if product name/description is SFW/appropriate
         // not that important
         log.info("Trying to add new product {}", newProduct.getName());
         Product product = new Product();
@@ -28,6 +36,10 @@ public class ProductService {
         product.setDescription(newProduct.getDescription());
         product.setStartingPrice(newProduct.getStartingPrice());
         product.setSeller_id(getCurrentUserID());
+        product.setActive(true);
+        product.setBiddingClosesOn(newProduct.getBiddingClosesOn());
+        product.setProductCondition(newProduct.getProductCondition());
+        product.setListedAtDate(newProduct.getListedAt());
         productRepository.save(product);
 
      }
@@ -37,7 +49,11 @@ public class ProductService {
         List<Product> products = productRepository.findAll();
         List<ProductDTO> productDTOS = new ArrayList<>();
         products.forEach( product -> {
-            productDTOS.add(daoToDTO(product));
+            try {
+                productDTOS.add(daoToDTO(product));
+            } catch (UserException e) {
+                throw new RuntimeException(e);
+            }
         });
         return productDTOS;
      }
@@ -48,7 +64,7 @@ public class ProductService {
          return currentUserDetails.getId();
      }
 
-     private ProductDTO daoToDTO(Product product){
+     private ProductDTO daoToDTO(Product product) throws UserException {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
@@ -58,6 +74,13 @@ public class ProductService {
         productDTO.setListedAt(product.getListedAtDate());
         productDTO.setListedAt(product.getBiddingClosesOn());
         productDTO.setIsActive(product.isActive());
+        productDTO.setSellerData(getSellerData(product.getSeller_id()));
         return productDTO;
+     }
+
+     private UserDataDto getSellerData(Long id) throws UserException{
+         User seller = userRepository.findUserById(id).orElseThrow(() ->new UserException(UserException.USER_NOT_FOUND));
+         ModelMapper modelMapper = new ModelMapper();
+         return modelMapper.map(seller,UserDataDto.class);
      }
 }

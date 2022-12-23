@@ -7,6 +7,7 @@ import com.mali.shop.dto.SigninDTO;
 import com.mali.shop.dto.UserDataDto;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.service.AuthService;
+import com.mali.shop.util.AuthHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,6 @@ public class AuthenticationController {
 
     @GetMapping("/current")
     public UserDataDto getCurrentUserDetails(){
-        return authService.getCurrentUserData();
+        return AuthHelper.getCurrentUserData();
     }
 }

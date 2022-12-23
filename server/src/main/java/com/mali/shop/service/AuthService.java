@@ -85,14 +85,6 @@ public class AuthService {
 
         return response;
     }
-
-    public UserDataDto getCurrentUserData() {
-        UserDataDto userDataDto = new UserDataDto();
-        ShopUserDetails userDetails = (ShopUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userDataDto.setFirstname(userDetails.getFirstName());
-        userDataDto.setLastName(userDetails.getLastName());
-        userDataDto.setUsername(userDetails.getUsername());
-        userDataDto.setEmail(userDetails.getEmail());
-        return userDataDto;
-    }
 }
+
+
