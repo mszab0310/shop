@@ -11,13 +11,3 @@ export type Product = {
   isActive: boolean;
   seller: UserData;
 };
-
-/**    private String name;
-    private String description;
-    private String productCondition;
-    private BigDecimal startingPrice;
-    private BigDecimal highestBid;
-    private Date listedAt;
-    private Date biddingClosesOn;
-    private Boolean isActive;
-    private UserDataDto sellerData; */
