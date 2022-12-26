@@ -2,7 +2,7 @@ import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectCha
 import React, { useEffect, useState } from "react";
 import Navbar from "src/components/Navbar";
 import { Product } from "src/dto/ProductDTO";
-import { getProductConditions } from "./ProductApi";
+import { addNewProduct, getProductConditions } from "../ProductApi";
 
 function AddNewProduct() {
   const [productCondition, setProductCondition] = useState<string[]>([]);
@@ -15,6 +15,20 @@ function AddNewProduct() {
     const name = formData.get("productName");
     const description = formData.get("productDescription");
     const price = formData.get("productPrice");
+    const product = {
+      name: name as string,
+      description: description as string,
+      productCondition: selectedProductCondition,
+      startingPrice: +price!,
+      highestBid: 0,
+      listedAt: new Date(Date.now()),
+      biddingClosesOn: new Date(selectedDate!),
+      isActive: true,
+      seller: null,
+    };
+    addNewProduct(product)
+      .then(() => alert("Addded"))
+      .catch(() => alert("Failed"));
   };
 
   useEffect(() => {
@@ -32,7 +46,6 @@ function AddNewProduct() {
   };
 
   const handleDateChange = (event: any) => {
-    console.log(event.target.value as Date);
     setSelectedDate(event.target.value);
   };
 

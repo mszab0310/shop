@@ -6,8 +6,8 @@ export type Product = {
   productCondition: string;
   startingPrice: number;
   highestBid: number;
-  listedAt: string;
-  biddingClosesOn: string;
+  listedAt: Date;
+  biddingClosesOn: Date;
   isActive: boolean;
-  seller: UserData;
+  seller: UserData | null;
 };

@@ -1,15 +1,12 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { NavigationRoutes } from "./routes/ROUTES";
 import LoginRenderer from "./util/LoginRenderer";
 import LoginPage from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import HomePage from "./pages/home/HomePage";
-import ProductPage from "./pages/product/ProductPage";
+import ProductPage from "./pages/product/page/ProductPage";
 import UserPage from "./pages/user/UserPage";
-import AddNewProduct from "./pages/product/AddNewProduct";
+import AddNewProduct from "./pages/product/add-new/AddNewProduct";
 
 function App() {
   return (
