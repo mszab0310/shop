@@ -28,6 +28,12 @@ public class ProductsController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/api/private/product")
+    public ProductDTO getProductWithId(@RequestParam Long id) throws Exception {
+        log.info("Received request to load product with id {}", id);
+        return productService.getProductById(id);
+    }
+
     @GetMapping("/api/private/products/new/condition")
     public List<String> getConditions(){
         log.info("Fetching product condtion types");

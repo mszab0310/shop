@@ -3,6 +3,7 @@ export enum NavigationRoutes {
   LOGIN = "/login",
   HOME = "/home",
   REGISTER = "/register",
+  PRODUCTS = "/products",
   PRODUCT = "/product",
   NEW_PRODUCT = "/product/new",
   USER = "/user",

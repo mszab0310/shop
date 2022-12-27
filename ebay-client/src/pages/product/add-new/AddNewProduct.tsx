@@ -25,6 +25,7 @@ function AddNewProduct() {
       biddingClosesOn: new Date(selectedDate!),
       isActive: true,
       seller: null,
+      id: -1,
     };
     addNewProduct(product)
       .then(() => alert("Addded"))

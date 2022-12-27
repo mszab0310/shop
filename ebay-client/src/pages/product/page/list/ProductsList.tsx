@@ -1,14 +1,14 @@
 import React from "react";
 import { useState } from "react";
-import { Product } from "../../../dto/ProductDTO";
+import { Product } from "../../../../dto/ProductDTO";
 import { useEffect } from "react";
-import { getAllProducts } from "../ProductApi";
-import ProductCard from "./card/ProductCard";
+import { getAllProducts } from "../../ProductApi";
+import ProductCard from "../card/ProductCard";
 
-import "./ProductPage.css";
-import Navbar from "../../../components/Navbar";
+import "./ProductsList.css";
+import Navbar from "../../../../components/Navbar";
 
-function ProductPage() {
+function ProductsList() {
   const [productList, setProductList] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -19,7 +19,6 @@ function ProductPage() {
       response.data.forEach((element: any) => {
         console.log(element);
         products.push(element);
-        // products.push({ name: element.name, description: element.description, startingPrice: element.startingPrice });
       });
       setProductList(products);
       setIsLoading(true);
@@ -43,4 +42,4 @@ function ProductPage() {
   );
 }
 
-export default ProductPage;
+export default ProductsList;

@@ -10,4 +10,5 @@ export type Product = {
   biddingClosesOn: Date;
   isActive: boolean;
   seller: UserData | null;
+  id: number;
 };

@@ -19,8 +19,7 @@ export default function ProductCard(props: ProductCardProps) {
   const navigate = useNavigate();
 
   const onClickTitle = () => {
-    navigate(NavigationRoutes.PRODUCT + `:${props.product.name}`);
-    //navigate to product page and add ID
+    navigate("/product/" + `${props.product.name}`, { state: { id: props.product.id } });
   };
 
   return (

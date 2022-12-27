@@ -2,6 +2,7 @@ package com.mali.shop.service;
 
 import com.mali.shop.dto.ProductDTO;
 import com.mali.shop.dto.UserDataDto;
+import com.mali.shop.exceptions.ProductException;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.User;
 import com.mali.shop.model.product.Product;
@@ -27,7 +28,7 @@ public class ProductService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addProduct(ProductDTO newProduct){
+    public void addProduct(ProductDTO newProduct) {
         // maybe do some checks if product name/description is SFW/appropriate
         // not that important
         log.info("Trying to add new product {}", newProduct.getName());
@@ -42,13 +43,13 @@ public class ProductService {
         product.setListedAtDate(newProduct.getListedAt());
         productRepository.save(product);
 
-     }
+    }
 
-     public List<ProductDTO> getAllProducts(){
+    public List<ProductDTO> getAllProducts() {
         log.info("Loading all products");
         List<Product> products = productRepository.findAll();
         List<ProductDTO> productDTOS = new ArrayList<>();
-        products.forEach( product -> {
+        products.forEach(product -> {
             try {
                 productDTOS.add(daoToDTO(product));
             } catch (UserException e) {
@@ -56,15 +57,21 @@ public class ProductService {
             }
         });
         return productDTOS;
-     }
+    }
 
-     private Long getCurrentUserID(){
+    public ProductDTO getProductById(Long id) throws Exception {
+        log.info("Trying to get product with ID {}", id);
+        Product product = productRepository.getProductByProduct_id(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
+        return daoToDTO(product);
+    }
+
+    private Long getCurrentUserID() {
         log.info("Getting id of current user");
-         ShopUserDetails currentUserDetails = (ShopUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-         return currentUserDetails.getId();
-     }
+        ShopUserDetails currentUserDetails = (ShopUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return currentUserDetails.getId();
+    }
 
-     private ProductDTO daoToDTO(Product product) throws UserException {
+    private ProductDTO daoToDTO(Product product) throws UserException {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
@@ -75,12 +82,13 @@ public class ProductService {
         productDTO.setListedAt(product.getBiddingClosesOn());
         productDTO.setIsActive(product.isActive());
         productDTO.setSellerData(getSellerData(product.getSeller_id()));
+        productDTO.setId(product.getProduct_id());
         return productDTO;
-     }
+    }
 
-     private UserDataDto getSellerData(Long id) throws UserException{
-         User seller = userRepository.findUserById(id).orElseThrow(() ->new UserException(UserException.USER_NOT_FOUND));
-         ModelMapper modelMapper = new ModelMapper();
-         return modelMapper.map(seller,UserDataDto.class);
-     }
+    private UserDataDto getSellerData(Long id) throws UserException {
+        User seller = userRepository.findUserById(id).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(seller, UserDataDto.class);
+    }
 }
