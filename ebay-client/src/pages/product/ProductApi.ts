@@ -23,3 +23,12 @@ export const getProductConditions = (): Promise<AxiosResponse<string[]>> => {
     },
   });
 };
+
+export const getProductById = (id: number): Promise<AxiosResponse<Product>> => {
+  return axios.get("http://localhost:8080/api/private/product", {
+    params: { id: id },
+    headers: {
+      Authorization: header,
+    },
+  });
+};

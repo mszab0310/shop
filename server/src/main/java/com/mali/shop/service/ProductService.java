@@ -61,7 +61,7 @@ public class ProductService {
 
     public ProductDTO getProductById(Long id) throws Exception {
         log.info("Trying to get product with ID {}", id);
-        Product product = productRepository.getProductByProduct_id(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
+        Product product = productRepository.findProductByProductId(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
         return daoToDTO(product);
     }
 
@@ -82,7 +82,7 @@ public class ProductService {
         productDTO.setListedAt(product.getBiddingClosesOn());
         productDTO.setIsActive(product.isActive());
         productDTO.setSellerData(getSellerData(product.getSeller_id()));
-        productDTO.setId(product.getProduct_id());
+        productDTO.setId(product.getProductId());
         return productDTO;
     }
 
