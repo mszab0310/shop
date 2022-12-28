@@ -1,0 +1,23 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.productContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.productHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+}
