@@ -39,8 +39,9 @@ function ProductPage() {
   };
 
   const submitBid = () => {
-    if (bid > product!.highestBid) {
-      submitBidForProduct(product!.id, bid)
+    if (bid > product!.highestBid && bid > product!.startingPrice) {
+      const bidObj = { bid: bid, id: product!.id };
+      submitBidForProduct(bidObj)
         .then(() => alert("Bid sumbitted"))
         .catch(() => {
           alert("bidding failed");
@@ -70,6 +71,7 @@ function ProductPage() {
                 <h1>The listing is no longer active</h1>
               )}
               <span>{product.description}</span>
+              <span>Starting price: {product.startingPrice}</span>
               <Button onClick={enterBiddingButton}>Start bidding</Button>
               <>
                 {wantToBid === true ? (

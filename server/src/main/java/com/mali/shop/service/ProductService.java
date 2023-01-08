@@ -1,5 +1,6 @@
 package com.mali.shop.service;
 
+import com.mali.shop.dto.BidDTO;
 import com.mali.shop.dto.ProductDTO;
 import com.mali.shop.dto.UserDataDto;
 import com.mali.shop.exceptions.ProductException;
@@ -76,6 +77,21 @@ public class ProductService {
         log.info("Getting id of current user");
         ShopUserDetails currentUserDetails = (ShopUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return currentUserDetails.getId();
+    }
+
+    public void addBidToProduct(BidDTO bid) throws ProductException {
+        Long id = bid.getId();
+        BigDecimal bidValue = bid.getBid();
+        Product product = productRepository.findProductByProductId(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
+        //compareTo returns -1 if bid is less than parameter, 0 if equal, 1 if greater
+        // we need it to be greater to be a valid bid
+        if(bidValue.compareTo(product.getHighestBid()) > 0 && bidValue.compareTo(product.getStartingPrice()) > 0){
+            product.setHighestBid(bidValue);
+            product.setHighestBidder_id(getCurrentUserID());
+            productRepository.save(product);
+        }else{
+            throw new ProductException(ProductException.PRODUCT_BID_INVALID);
+        }
     }
 
     private ProductDTO daoToDTO(Product product) throws UserException {

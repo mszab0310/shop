@@ -1,12 +1,15 @@
 package com.mali.shop.controller;
 
+import com.mali.shop.dto.BidDTO;
 import com.mali.shop.dto.ProductDTO;
 import com.mali.shop.enums.ProductCondition;
 import com.mali.shop.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -52,8 +55,9 @@ public class ProductsController {
         return productService.getHighestBidOfProduct(id);
     }
 
-    @PostMapping("/api/private/product/bid")
-    public void submitBidForProduct(@RequestParam BigDecimal bid, @RequestParam Long id) throws Exception{
-        //TODO: add bid function to product serrvice
+    @PostMapping(value = "/api/private/product/bid", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void submitBidForProduct(@RequestBody BidDTO bidDTO) throws Exception{
+        //TODO: add bid function to product service
+        productService.addBidToProduct(bidDTO);
     }
 }

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { Bid } from "src/dto/BidDto";
 import { Product } from "../../dto/ProductDTO";
 
 const token = localStorage.getItem("jwt");
@@ -33,11 +34,12 @@ export const getProductById = (id: number): Promise<AxiosResponse<Product>> => {
   });
 };
 
-export const submitBidForProduct = (id: number, bid: number) => {
-  return axios.post("http://localhost:8080/api/private/product/bid", {
-    params: { id: id, bid: bid },
+export const submitBidForProduct = (bidObj: Bid) => {
+  console.log(header);
+  return axios.post("http://localhost:8080/api/private/product/bid", bidObj, {
     headers: {
       Authorization: header,
+      "Content-Type": "application/json",
     },
   });
 };
