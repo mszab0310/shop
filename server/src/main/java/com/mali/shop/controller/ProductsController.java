@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -34,9 +35,25 @@ public class ProductsController {
         return productService.getProductById(id);
     }
 
+
+
     @GetMapping("/api/private/products/new/condition")
     public List<String> getConditions(){
         log.info("Fetching product condtion types");
         return ProductCondition.getProductConditions();
+    }
+
+    /*
+    * This will be a polling endpoint for when a user accesses a product page and wants to see live bid
+    * */
+    @GetMapping("/api/private/product/highestbid")
+    public BigDecimal getHighestbidOfProduct(@RequestParam Long id) throws Exception {
+        log.info("Fetching bid for product with id {}",id);
+        return productService.getHighestBidOfProduct(id);
+    }
+
+    @PostMapping("/api/private/product/bid")
+    public void submitBidForProduct(@RequestParam BigDecimal bid, @RequestParam Long id) throws Exception{
+        //TODO: add bid function to product serrvice
     }
 }

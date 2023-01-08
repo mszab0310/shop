@@ -1,4 +1,3 @@
-import * as React from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -7,8 +6,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Product } from "../../../../dto/ProductDTO";
 import { CardActionArea } from "@mui/material";
-import { NavigationRoutes } from "src/routes/ROUTES";
 import { useNavigate } from "react-router-dom";
+import "./ProductCard.css";
 
 export type ProductCardProps = {
   product: Product;
@@ -23,17 +22,18 @@ export default function ProductCard(props: ProductCardProps) {
   };
 
   return (
-    <Card sx={{ minWitdh: "80%", margin: "auto" }}>
+    <Card sx={{ minWitdh: "80%", margin: "auto" }} className="productCard" onClick={onClickTitle}>
       <CardActionArea>
         <CardMedia component="img" height="140" image={productImage} alt="product image" />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div" onClick={onClickTitle}>
+          <Typography gutterBottom variant="h5" component="div">
             {props.product.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {props.product.description}
           </Typography>
-          <Typography>{props.product.startingPrice}</Typography>
+          <Typography>Starting at: {props.product.startingPrice}</Typography>
+          <Typography>Bidding closes on: {new Date(props.product.biddingClosesOn).toLocaleString()}</Typography>
         </CardContent>
         <CardActions>
           <Button size="small">Learn more</Button>

@@ -32,3 +32,12 @@ export const getProductById = (id: number): Promise<AxiosResponse<Product>> => {
     },
   });
 };
+
+export const submitBidForProduct = (id: number, bid: number) => {
+  return axios.post("http://localhost:8080/api/private/product/bid", {
+    params: { id: id, bid: bid },
+    headers: {
+      Authorization: header,
+    },
+  });
+};

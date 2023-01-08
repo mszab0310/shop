@@ -29,7 +29,7 @@ function ProductsList() {
     <>
       <Navbar />
       {isLoading ? (
-        <div className="productContainer">
+        <div className="productListContainer">
           {productList.map((product: Product) => {
             console.log(product);
             return <ProductCard key={Math.random()} product={product} />;

@@ -14,10 +14,36 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  margin: 10pt;
+  border-radius: 5pt;
+  max-width: 50%;
+  max-height: max-content;
+  background-color: aqua;
 }
 
 .productHeader {
   display: flex;
   flex-direction: row;
   align-items: top;
+  justify-content: center;
+}
+
+.productImage {
+  max-width: 25%;
+  max-height: 25%;
+  border-radius: 2pt;
+  margin: 5pt;
+  margin-top: 15pt;
+  border: 5pt;
+  border-color: black;
+}
+
+.productName {
+  margin: 5pt;
+}
+
+.bidBox {
+  background-color: white;
+  border: 1px solid;
 }

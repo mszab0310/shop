@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class ProductService {
         product.setBiddingClosesOn(newProduct.getBiddingClosesOn());
         product.setProductCondition(newProduct.getProductCondition());
         product.setListedAtDate(newProduct.getListedAt());
+        product.setHighestBid(BigDecimal.valueOf(0));
         productRepository.save(product);
 
     }
@@ -65,6 +67,11 @@ public class ProductService {
         return daoToDTO(product);
     }
 
+    public BigDecimal getHighestBidOfProduct(Long id) throws Exception{
+        ProductDTO product = getProductById(id);
+        return product.getHighestBid();
+    }
+
     private Long getCurrentUserID() {
         log.info("Getting id of current user");
         ShopUserDetails currentUserDetails = (ShopUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -79,7 +86,7 @@ public class ProductService {
         productDTO.setStartingPrice(product.getStartingPrice());
         productDTO.setHighestBid(product.getHighestBid());
         productDTO.setListedAt(product.getListedAtDate());
-        productDTO.setListedAt(product.getBiddingClosesOn());
+        productDTO.setBiddingClosesOn(product.getBiddingClosesOn());
         productDTO.setIsActive(product.isActive());
         productDTO.setSellerData(getSellerData(product.getSeller_id()));
         productDTO.setId(product.getProductId());
