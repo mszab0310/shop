@@ -57,7 +57,12 @@ public class ProductsController {
 
     @PostMapping(value = "/api/private/product/bid", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void submitBidForProduct(@RequestBody BidDTO bidDTO) throws Exception{
-        //TODO: add bid function to product service
         productService.addBidToProduct(bidDTO);
+    }
+
+    @GetMapping(value = "/api/private/products/search")
+    public List<ProductDTO> searchProducts(@RequestParam String query) throws Exception {
+        log.info("Recieved request to search for products by query {}", query);
+        return productService.searchProducts(query);
     }
 }

@@ -7,37 +7,15 @@ function HomePage() {
   const getResource = async () => {
     const token = localStorage.getItem("jwt");
     const header = "Bearer " + token;
-    await axios
-      .get("http://localhost:8080/resource", {
-        headers: {
-          Authorization: header,
-        },
-      })
-      .then((resp: any) => {
-        setData(resp.data);
-      });
-  };
-
-  const saveListing = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const token = localStorage.getItem("jwt");
-    const header = "Bearer " + token;
-    const name = formData.get("productName");
-    const desrpition = formData.get("productDescription");
-    const price = formData.get("productPrice");
-    axios
-      .post(
-        "http://localhost:8080/api/private/products/new",
-        { name: name, description: desrpition, startingPrice: price },
-        {
-          headers: {
-            Authorization: header,
-          },
-        }
-      )
-      .then(() => console.log("Product added"))
-      .catch((error) => console.log(error.message));
+    await axios({
+      method: "get",
+      url: "http://localhost:8080/resource",
+      headers: {
+        Authorization: header,
+      },
+    }).then((resp: any) => {
+      setData(resp.data);
+    });
   };
 
   return (

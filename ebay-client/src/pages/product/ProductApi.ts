@@ -6,11 +6,14 @@ const token = localStorage.getItem("jwt");
 const header = "Bearer " + token;
 
 export const getAllProducts = async (): Promise<AxiosResponse<Product[]>> => {
-  return await axios.get("http://localhost:8080/api/public/products");
+  return await axios({ method: "get", url: "http://localhost:8080/api/public/products" });
 };
 
 export const addNewProduct = async (product: Product) => {
-  return axios.post("http://localhost:8080/api/private/products/new", product, {
+  return axios({
+    method: "post",
+    url: "http://localhost:8080/api/private/products/new",
+    data: product,
     headers: {
       Authorization: header,
     },
@@ -18,7 +21,9 @@ export const addNewProduct = async (product: Product) => {
 };
 
 export const getProductConditions = (): Promise<AxiosResponse<string[]>> => {
-  return axios.get("http://localhost:8080/api/private/products/new/condition", {
+  return axios({
+    method: "get",
+    url: "http://localhost:8080/api/private/products/new/condition",
     headers: {
       Authorization: header,
     },
@@ -26,7 +31,9 @@ export const getProductConditions = (): Promise<AxiosResponse<string[]>> => {
 };
 
 export const getProductById = (id: number): Promise<AxiosResponse<Product>> => {
-  return axios.get("http://localhost:8080/api/private/product", {
+  return axios({
+    method: "get",
+    url: "http://localhost:8080/api/private/product",
     params: { id: id },
     headers: {
       Authorization: header,
@@ -35,11 +42,24 @@ export const getProductById = (id: number): Promise<AxiosResponse<Product>> => {
 };
 
 export const submitBidForProduct = (bidObj: Bid) => {
-  console.log(header);
-  return axios.post("http://localhost:8080/api/private/product/bid", bidObj, {
+  return axios({
+    method: "post",
+    url: "http://localhost:8080/api/private/product/bid",
+    data: bidObj,
     headers: {
       Authorization: header,
       "Content-Type": "application/json",
+    },
+  });
+};
+
+export const getBidForProduct = (id: number) => {
+  return axios({
+    method: "get",
+    url: "http://localhost:8080/api/private/product/highestbid",
+    params: { id: id },
+    headers: {
+      Authorization: header,
     },
   });
 };

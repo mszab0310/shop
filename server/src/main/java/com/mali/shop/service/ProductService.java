@@ -79,6 +79,20 @@ public class ProductService {
         return currentUserDetails.getId();
     }
 
+    public List<ProductDTO> searchProducts(String query) throws Exception {
+        log.info("Searching products in database by query {}", query);
+        List<ProductDTO> productDTOS =  new ArrayList<>();
+        List<Product> products = productRepository.searchProducts(query);
+        products.forEach((product) -> {
+            try {
+                productDTOS.add(daoToDTO(product));
+            } catch (UserException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return productDTOS;
+    }
+
     public void addBidToProduct(BidDTO bid) throws ProductException {
         Long id = bid.getId();
         BigDecimal bidValue = bid.getBid();

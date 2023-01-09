@@ -14,4 +14,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
 //    @Query("select  p from Product  p where p.product_id = id")
     Optional<Product> findProductByProductId(Long product_id);
+
+    @Query("SELECT p FROM Product p WHERE " +
+            "p.name LIKE CONCAT('%',:query, '%')" +
+            "Or p.description LIKE CONCAT('%', :query, '%')")
+    List<Product> searchProducts(String query);
 }

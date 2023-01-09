@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "src/components/Navbar";
 import { Product } from "src/dto/ProductDTO";
-import { getProductById } from "../../ProductApi";
+import { getBidForProduct, getProductById } from "../../ProductApi";
 import "./ProductPage.css";
 import { NavigationRoutes } from "src/routes/ROUTES";
 import { Button, CircularProgress } from "@mui/material";
 import { submitBidForProduct } from "./../../ProductApi";
+import { useInterval } from "usehooks-ts";
 
 function ProductPage() {
   const location = useLocation();
@@ -16,6 +17,7 @@ function ProductPage() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [wantToBid, setWantToBid] = useState<boolean>(false);
   const [bid, setBid] = useState<number>(0);
+  const [currentBid, setCurrentBid] = useState<number>(0);
 
   useEffect(() => {
     getProductById(location.state.id)
@@ -29,6 +31,36 @@ function ProductPage() {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   while (wantToBid === true) {
+  //     setTimeout(() => {
+  //       getBidForProduct(product!.id)
+  //         .then((response) => {
+  //           setCurrentBid(response.data);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //           setCurrentBid(0);
+  //         });
+  //     }, 5000);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [wantToBid]);
+
+  useInterval(
+    () => {
+      getBidForProduct(product!.id)
+        .then((response) => {
+          setCurrentBid(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          setCurrentBid(0);
+        });
+    },
+    wantToBid ? 3000 : null
+  );
 
   const enterBiddingButton = () => {
     setWantToBid(true);
@@ -77,7 +109,7 @@ function ProductPage() {
                 {wantToBid === true ? (
                   <div>
                     <div>Current highest bid</div>
-                    <p className="bidBox">{product!.highestBid === 0 ? "No bids yet" : product!.highestBid}</p>
+                    <p className="bidBox">{currentBid === 0 ? "No bids yet" : currentBid}</p>
                     <p>Enter your bid here</p>
                     <input type={"number"} onChange={getBid} />
                     <button onClick={submitBid}>Submit bid</button>
