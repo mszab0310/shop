@@ -32,22 +32,6 @@ function ProductPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   while (wantToBid === true) {
-  //     setTimeout(() => {
-  //       getBidForProduct(product!.id)
-  //         .then((response) => {
-  //           setCurrentBid(response.data);
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //           setCurrentBid(0);
-  //         });
-  //     }, 5000);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [wantToBid]);
-
   useInterval(
     () => {
       getBidForProduct(product!.id)

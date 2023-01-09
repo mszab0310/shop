@@ -13,11 +13,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { NavigationRoutes } from "../routes/ROUTES";
+import { useState } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,6 +62,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [query, setQuery] = useState<string>("");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -105,6 +106,12 @@ export default function Navbar() {
     localStorage.removeItem("jwt");
     navigate(NavigationRoutes.LOGIN);
   };
+
+  const setSearchQuery = (event: any) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const submitSearch = () => {};
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -187,10 +194,10 @@ export default function Navbar() {
             Ebay
           </Typography>
           <Search>
-            <SearchIconWrapper>
+            <SearchIconWrapper onClick={submitSearch}>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+            <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} onChange={setSearchQuery} />
           </Search>
           <Typography onClick={onClickProducts} variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
             Products

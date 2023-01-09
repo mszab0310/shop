@@ -63,3 +63,14 @@ export const getBidForProduct = (id: number) => {
     },
   });
 };
+
+export const getSearchResult = (query: string): Promise<AxiosResponse<Product[]>> => {
+  return axios({
+    method: "get",
+    url: "http://localhost:8080/api/private/products/search",
+    params: { query: query },
+    headers: {
+      Authorization: header,
+    },
+  });
+};

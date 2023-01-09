@@ -14,10 +14,8 @@ function ProductsList() {
 
   useEffect(() => {
     const products: Product[] = [];
-    console.log("Fetching products");
     getAllProducts().then((response: any) => {
       response.data.forEach((element: any) => {
-        console.log(element);
         products.push(element);
       });
       setProductList(products);
