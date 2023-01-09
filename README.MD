@@ -4,7 +4,8 @@
 
 In order to run this application you will need:
 
-- Node js v16.14.2 - versions above this might not be compatible with the proxy used in the react application
+- Node js v16.15.0 - versions above this might not be compatible with the proxy used in the react application
+  - Node version was updated to 16.15.* to be able to install usehooks node module
 - Maven 3.8.6 with Java 11 - should work with versions of Java above 11 as well
 
 To run this application:
