@@ -17,7 +17,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { NavigationRoutes } from "../routes/ROUTES";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AppContext } from "./../context/context";
+import { Button } from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,6 +66,8 @@ export default function Navbar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
   const [query, setQuery] = useState<string>("");
 
+  const { dispatchSearchEvent } = useContext(AppContext);
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const navigate = useNavigate();
@@ -108,10 +112,13 @@ export default function Navbar() {
   };
 
   const setSearchQuery = (event: any) => {
-    setSearchQuery(event.target.value);
+    setQuery(event.target.value);
   };
 
-  const submitSearch = () => {};
+  const submitSearch = () => {
+    console.log("clikced");
+    dispatchSearchEvent("SET", { query: query });
+  };
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -194,10 +201,11 @@ export default function Navbar() {
             Ebay
           </Typography>
           <Search>
-            <SearchIconWrapper onClick={submitSearch}>
+            <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} onChange={setSearchQuery} />
+            <Button onClick={submitSearch}>Search</Button>
           </Search>
           <Typography onClick={onClickProducts} variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
             Products
