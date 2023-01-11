@@ -18,6 +18,9 @@ function ProductPage() {
   const [wantToBid, setWantToBid] = useState<boolean>(false);
   const [bid, setBid] = useState<number>(0);
   const [currentBid, setCurrentBid] = useState<number>(0);
+  const [message, setMessage] = useState<string>("");
+
+  const websocket = "ws://localhost:8080/websocket-test";
 
   useEffect(() => {
     getProductById(location.state.id)
@@ -68,6 +71,12 @@ function ProductPage() {
     }
   };
 
+  const getMessageInput = (event: any) => {
+    setMessage(event.target.value);
+  };
+
+  const sendMessage = () => {};
+
   return (
     <>
       <Navbar />
@@ -105,6 +114,8 @@ function ProductPage() {
             </div>
           )}
         </div>
+        <input type="text" onChange={getMessageInput} />
+        <button onClick={sendMessage}>Send</button>
       </div>
     </>
   );

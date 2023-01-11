@@ -2,14 +2,15 @@ import axios, { AxiosResponse } from "axios";
 import { Bid } from "src/dto/BidDto";
 import { Product } from "../../dto/ProductDTO";
 
-const token = localStorage.getItem("jwt");
-const header = "Bearer " + token;
-
 export const getAllProducts = async (): Promise<AxiosResponse<Product[]>> => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
   return await axios({ method: "get", url: "http://localhost:8080/api/public/products" });
 };
 
 export const addNewProduct = async (product: Product) => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
   return axios({
     method: "post",
     url: "http://localhost:8080/api/private/products/new",
@@ -21,6 +22,8 @@ export const addNewProduct = async (product: Product) => {
 };
 
 export const getProductConditions = (): Promise<AxiosResponse<string[]>> => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
   return axios({
     method: "get",
     url: "http://localhost:8080/api/private/products/new/condition",
@@ -31,6 +34,8 @@ export const getProductConditions = (): Promise<AxiosResponse<string[]>> => {
 };
 
 export const getProductById = (id: number): Promise<AxiosResponse<Product>> => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
   return axios({
     method: "get",
     url: "http://localhost:8080/api/private/product",
@@ -42,6 +47,8 @@ export const getProductById = (id: number): Promise<AxiosResponse<Product>> => {
 };
 
 export const submitBidForProduct = (bidObj: Bid) => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
   return axios({
     method: "post",
     url: "http://localhost:8080/api/private/product/bid",
@@ -54,6 +61,8 @@ export const submitBidForProduct = (bidObj: Bid) => {
 };
 
 export const getBidForProduct = (id: number) => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
   return axios({
     method: "get",
     url: "http://localhost:8080/api/private/product/highestbid",
@@ -65,6 +74,8 @@ export const getBidForProduct = (id: number) => {
 };
 
 export const getSearchResult = (query: string): Promise<AxiosResponse<Product[]>> => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
   return axios({
     method: "get",
     url: "http://localhost:8080/api/private/products/search",

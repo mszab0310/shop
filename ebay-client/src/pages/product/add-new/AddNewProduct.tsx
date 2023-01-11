@@ -1,8 +1,8 @@
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Navbar from "src/components/Navbar";
-import { Product } from "src/dto/ProductDTO";
 import { addNewProduct, getProductConditions } from "../ProductApi";
+import "./AddNewProduct.css";
 
 function AddNewProduct() {
   const [productCondition, setProductCondition] = useState<string[]>([]);
@@ -53,7 +53,7 @@ function AddNewProduct() {
   return (
     <div>
       <Navbar />
-      <Box component="form" onSubmit={saveListing} noValidate sx={{ mt: 1 }}>
+      <Box component="form" onSubmit={saveListing} noValidate sx={{ mt: 1, display: "flex", flexDirection: "column" }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField hiddenLabel name="productName" label="Product name" id="productName" variant="filled" size="small" />
