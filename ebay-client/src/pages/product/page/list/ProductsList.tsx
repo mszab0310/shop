@@ -56,7 +56,6 @@ function ProductsList() {
       {isLoading ? (
         <div className="productListContainer">
           {productList.map((product: Product) => {
-            console.log(product);
             return <ProductCard key={Math.random()} product={product} />;
           })}
         </div>

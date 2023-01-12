@@ -8,6 +8,7 @@ import { NavigationRoutes } from "src/routes/ROUTES";
 import { Button, CircularProgress } from "@mui/material";
 import { submitBidForProduct } from "./../../ProductApi";
 import { useInterval } from "usehooks-ts";
+import { Client } from "@stomp/stompjs";
 
 function ProductPage() {
   const location = useLocation();
@@ -19,8 +20,9 @@ function ProductPage() {
   const [bid, setBid] = useState<number>(0);
   const [currentBid, setCurrentBid] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
+  let client: Client;
 
-  const websocket = "ws://localhost:8080/websocket-test";
+  const SOCKET_URL = "ws://localhost:8080/ws-message";
 
   useEffect(() => {
     getProductById(location.state.id)
@@ -75,7 +77,41 @@ function ProductPage() {
     setMessage(event.target.value);
   };
 
-  const sendMessage = () => {};
+  const sendMessage = () => {
+    connectToWs();
+  };
+
+  const connectToWs = () => {
+    client = new Client({
+      brokerURL: SOCKET_URL,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      onConnect: onConnected,
+      onDisconnect: onDisconnected,
+    });
+
+    client.activate();
+  };
+
+  const onConnected = () => {
+    console.log("Connected!!");
+    client.subscribe(`/product_update/${product!.id}`, (msg) => {
+      if (msg.body) {
+        const product = JSON.parse(msg.body);
+        console.log("Price:" + product.price);
+        console.log(product);
+      }
+    });
+  };
+
+  const onDisconnected = () => {
+    console.log("Disconnected!!");
+  };
+
+  const sendMessageFr = () => {
+    client.send("/app/product_update", { priority: 9 }, JSON.stringify(message));
+  };
 
   return (
     <>
@@ -115,7 +151,8 @@ function ProductPage() {
           )}
         </div>
         <input type="text" onChange={getMessageInput} />
-        <button onClick={sendMessage}>Send</button>
+        <button onClick={sendMessage}>Connect</button>
+        <button onClick={sendMessageFr}>SEND</button>
       </div>
     </>
   );
