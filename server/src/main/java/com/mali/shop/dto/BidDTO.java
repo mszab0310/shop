@@ -7,5 +7,5 @@ import java.math.BigDecimal;
 @Data
 public class BidDTO {
     private BigDecimal bid;
-    private Long id;
+    private Long productId;
 }

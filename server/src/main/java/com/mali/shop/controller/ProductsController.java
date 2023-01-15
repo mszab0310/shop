@@ -57,6 +57,7 @@ public class ProductsController {
 
     @PostMapping(value = "/api/private/product/bid", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void submitBidForProduct(@RequestBody BidDTO bidDTO) throws Exception{
+        log.info("Recieved request to submit bid {} for product {}",bidDTO.getBid(),bidDTO.getProductId());
         productService.addBidToProduct(bidDTO);
     }
 

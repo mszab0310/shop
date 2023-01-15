@@ -94,7 +94,7 @@ public class ProductService {
     }
 
     public void addBidToProduct(BidDTO bid) throws ProductException {
-        Long id = bid.getId();
+        Long id = bid.getProductId();
         BigDecimal bidValue = bid.getBid();
         Product product = productRepository.findProductByProductId(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
         //compareTo returns -1 if bid is less than parameter, 0 if equal, 1 if greater
