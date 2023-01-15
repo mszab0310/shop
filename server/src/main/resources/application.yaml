@@ -15,6 +15,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringSerializer
+      value-deserializer: org.apache.kafka.common.serialization.JsonSerializer
 logging:
   level:
     org:
