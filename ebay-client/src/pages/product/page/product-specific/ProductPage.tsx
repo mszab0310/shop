@@ -36,6 +36,7 @@ function ProductPage() {
         //probably unauthorized
         navigate(NavigationRoutes.PRODUCTS);
       });
+
     getBidForProduct(location.state.id)
       .then((response) => {
         setCurrentBid(response.data);
@@ -44,6 +45,7 @@ function ProductPage() {
         console.log(err);
         setCurrentBid(0);
       });
+
     clientRef.current = new Client({
       brokerURL: SOCKET_URL,
       reconnectDelay: 5000,

@@ -58,6 +58,7 @@ export default function LoginPage() {
         const token = res.data.token;
         localStorage.setItem("jwt", token);
         setRequestStatusMessage("Login successfull");
+        setStatus("success");
         setShowAlert(true);
         setTimeout(() => {
           navigate("/home");
