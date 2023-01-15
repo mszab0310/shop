@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,10 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
     public void registerUser(RegisterUserDTO newUser) throws UserException {
+        if(newUser.getEmail().isEmpty() || newUser.getFirstName().isEmpty() ||
+           newUser.getLastName().isEmpty() || newUser.getUsername().isEmpty() || newUser.getPassword().isEmpty()){
+            throw new UserException(UserException.INCOMPLETE_FIELDS);
+        }
         log.info("Trying to register user with email {} and username {}", newUser.getEmail(), newUser.getUsername());
         if (userRepository.existsByEmail(newUser.getEmail())) {
             log.error(UserException.EMAIL_TAKEN + newUser.getEmail());
@@ -66,24 +71,35 @@ public class AuthService {
         }
     }
 
-    public JwtDTO doSignin(SigninDTO signinDTO) {
+    public JwtDTO doSignin(SigninDTO signinDTO) throws UserException{
         log.info("Trying to sign in user with username {}", signinDTO.getUsername());
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(), signinDTO.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(signinDTO.getUsername().isEmpty() || signinDTO.getPassword().isEmpty()){
+            throw new UserException(UserException.INCOMPLETE_FIELDS);
+        }
+        if(!userRepository.existsByUsername(signinDTO.getUsername())){
+            throw new UserException(UserException.USER_NOT_FOUND);
+        }
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(), signinDTO.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtUtil.generateJwtToken(authentication);
+            String jwt = jwtUtil.generateJwtToken(authentication);
 
-        ShopUserDetails userDetails = (ShopUserDetails) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+            ShopUserDetails userDetails = (ShopUserDetails) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
-        JwtDTO response = new JwtDTO();
-        response.setToken(jwt);
-        response.setEmail(userDetails.getEmail());
-        response.setUsername(userDetails.getUsername());
-        response.setRoles(roles);
-        log.info("User signed in with username {}", userDetails.getUsername());
+            JwtDTO response = new JwtDTO();
+            response.setToken(jwt);
+            response.setEmail(userDetails.getEmail());
+            response.setUsername(userDetails.getUsername());
+            response.setRoles(roles);
+            log.info("User signed in with username {}", userDetails.getUsername());
 
-        return response;
+            return response;
+        }catch (AuthenticationException authentication){
+            throw new UserException(UserException.BAD_CREDENTIALS);
+        }
+
     }
 }
 

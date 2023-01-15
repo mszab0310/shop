@@ -14,6 +14,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavigationRoutes } from "../../routes/ROUTES";
+import Alert, { AlertColor } from "@mui/material/Alert";
 
 function Copyright(props: any) {
   return (
@@ -33,6 +34,8 @@ const theme = createTheme();
 export default function Register() {
   const navigate = useNavigate();
   const [requestStatusMessage, setRequestStatusMessage] = useState<string | undefined>(undefined);
+  const [status, setStatus] = useState<AlertColor>("success");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,9 +57,16 @@ export default function Register() {
       )
       .then(() => {
         setRequestStatusMessage("Account created successfully!");
+        setStatus("success");
+        setShowAlert(true);
         setTimeout(() => {
           navigate("/");
         }, 2500);
+      })
+      .catch((err: any) => {
+        setRequestStatusMessage(err.response.data.message);
+        setShowAlert(true);
+        setStatus("error");
       });
   };
 
@@ -78,9 +88,7 @@ export default function Register() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Typography component="h2" variant="h6">
-            {requestStatusMessage}
-          </Typography>
+          {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>

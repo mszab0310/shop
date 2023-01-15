@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -54,12 +55,20 @@ public class ProductService {
         List<ProductDTO> productDTOS = new ArrayList<>();
         products.forEach(product -> {
             try {
+                if(checkIfProductIsExpired(product)) {
+                    product.setActive(false);
+                    productRepository.save(product);
+                }
                 productDTOS.add(daoToDTO(product));
             } catch (UserException e) {
                 throw new RuntimeException(e);
             }
         });
         return productDTOS;
+    }
+
+    private boolean checkIfProductIsExpired(Product product){
+        return product.getBiddingClosesOn().before(new Date());
     }
 
     public ProductDTO getProductById(Long id) throws Exception {

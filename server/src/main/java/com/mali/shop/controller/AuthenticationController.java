@@ -26,7 +26,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/signin", consumes = "application/json")
-    public JwtDTO signIn(@RequestBody SigninDTO signinDTO){
+    public JwtDTO signIn(@RequestBody SigninDTO signinDTO) throws UserException{
         return authService.doSignin(signinDTO);
     }
 

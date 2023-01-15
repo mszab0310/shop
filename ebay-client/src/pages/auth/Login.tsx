@@ -14,6 +14,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Alert, AlertColor } from "@mui/material";
 
 function Copyright(props: any) {
   return (
@@ -32,6 +34,9 @@ const theme = createTheme();
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [requestStatusMessage, setRequestStatusMessage] = useState<string | undefined>(undefined);
+  const [status, setStatus] = useState<AlertColor>("success");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,10 +57,16 @@ export default function LoginPage() {
       .then((res: any) => {
         const token = res.data.token;
         localStorage.setItem("jwt", token);
-        navigate("/home");
+        setRequestStatusMessage("Login successfull");
+        setShowAlert(true);
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000);
       })
       .catch((err) => {
-        alert("Failed to log in beacuse: " + err);
+        setRequestStatusMessage(err.response.data.message);
+        setStatus("error");
+        setShowAlert(true);
       });
   };
 
@@ -77,6 +88,7 @@ export default function LoginPage() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField margin="normal" required fullWidth id="username" label="Username" name="username" autoComplete="username" autoFocus />
             <TextField
