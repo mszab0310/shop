@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     void removeProductByProductId(Long id);
 
     @Query("SELECT p FROM Product p WHERE " +
-            "p.name LIKE CONCAT('%',:query, '%')" +
-            "Or p.description LIKE CONCAT('%', :query, '%')")
+            "UPPER(p.name) LIKE CONCAT('%',UPPER(:query), '%')" +
+            "Or UPPER(p.description) LIKE CONCAT('%', UPPER(:query), '%')")
     List<Product> searchProducts(String query);
 }
