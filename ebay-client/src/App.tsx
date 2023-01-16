@@ -12,6 +12,7 @@ import { useState } from "react";
 import { AppContext } from "./context/context";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import ProtectedRoutes from "./security/ProtectedRoutes";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -40,11 +41,13 @@ function App() {
           <Route path={NavigationRoutes.REGISTER} element={<Register />} />
           <Route path={NavigationRoutes.HOME} element={<HomePage />} />
           <Route path={NavigationRoutes.PRODUCTS} element={<ProductsList />} />
-          <Route path={NavigationRoutes.PRODUCT}>
-            <Route path=":name" element={<ProductPage />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route path={NavigationRoutes.PRODUCT}>
+              <Route path=":name" element={<ProductPage />} />
+            </Route>
+            <Route path={NavigationRoutes.NEW_PRODUCT} element={<AddNewProduct />} />
+            <Route path={NavigationRoutes.USER} element={<UserPage />} />
           </Route>
-          <Route path={NavigationRoutes.NEW_PRODUCT} element={<AddNewProduct />} />
-          <Route path={NavigationRoutes.USER} element={<UserPage />} />
         </Routes>
       </AppContext.Provider>
     </div>

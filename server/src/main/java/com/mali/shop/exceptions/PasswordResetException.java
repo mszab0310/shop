@@ -1,7 +1,5 @@
 package com.mali.shop.exceptions;
 
-import org.apache.kafka.common.protocol.types.Field;
-
 public class PasswordResetException extends BaseCustomException{
     public static final String TOKEN_NOT_FOUND = "Token not found";
     public static final String TOKEN_EXPIRED = "Token expired";
