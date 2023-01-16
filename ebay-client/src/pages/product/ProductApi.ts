@@ -85,3 +85,16 @@ export const getSearchResult = (query: string): Promise<AxiosResponse<Product[]>
     },
   });
 };
+
+export const deleteProduct = (id: number) => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
+  return axios({
+    method: "delete",
+    url: "http://localhost:8080/api/private/product",
+    params: { id: id },
+    headers: {
+      Authorization: header,
+    },
+  });
+};

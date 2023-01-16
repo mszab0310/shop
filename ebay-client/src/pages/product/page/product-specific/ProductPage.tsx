@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "src/components/Navbar";
 import { Product } from "src/dto/ProductDTO";
 import { Bid } from "src/dto/BidDto";
-import { getBidForProduct, getProductById } from "../../ProductApi";
+import { deleteProduct, getBidForProduct, getProductById } from "../../ProductApi";
 import "./ProductPage.css";
 import { NavigationRoutes } from "src/routes/ROUTES";
 import { Alert, AlertColor, Button, CircularProgress } from "@mui/material";
@@ -27,6 +27,7 @@ function ProductPage() {
   const [status, setStatus] = useState<AlertColor>("success");
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [userdata, setUserData] = useState<UserData | null>(null);
+  const [isOwnProduct, setIsOwnProduct] = useState<boolean>(false);
 
   const clientRef = useRef<Client | null>(null);
 
@@ -67,6 +68,12 @@ function ProductPage() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    console.log("userdata hook");
+    if (userdata !== null && product !== null) if (userdata?.id === product!.sellerData!.id) setIsOwnProduct(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userdata, product]);
 
   // useInterval(
   //   () => {
@@ -139,6 +146,24 @@ function ProductPage() {
     console.log("Disconnected!!");
   };
 
+  const deleteListing = () => {
+    deleteProduct(product!.id)
+      .then(() => {
+        setRequestStatusMessage("Prduct deleted");
+        setStatus("success");
+        setShowAlert(true);
+        setTimeout(() => {
+          navigate(NavigationRoutes.USER);
+        }, 3000);
+      })
+      .catch((err: any) => {
+        setRequestStatusMessage("Error: " + err.response.data.message);
+        setStatus("error");
+        setShowAlert(true);
+        setIsOwnProduct(false);
+      });
+  };
+
   return (
     <>
       <Navbar />
@@ -158,6 +183,11 @@ function ProductPage() {
                 <h1>The listing is no longer active</h1>
               )}
               <span>{product.description}</span>
+              {isOwnProduct && (
+                <Button onClick={deleteListing} variant="contained" sx={{ mt: 3, mb: 2 }}>
+                  Delete Listing
+                </Button>
+              )}
               <span>Starting price: {product.startingPrice}</span>
               <Button disabled={!product.isActive} onClick={enterBiddingButton} variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Start bidding

@@ -3,6 +3,8 @@ package com.mali.shop.controller;
 import com.mali.shop.dto.BidDTO;
 import com.mali.shop.dto.ProductDTO;
 import com.mali.shop.enums.ProductCondition;
+import com.mali.shop.exceptions.ProductException;
+import com.mali.shop.exceptions.UserException;
 import com.mali.shop.service.ProductService;
 import com.mali.shop.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +83,12 @@ public class ProductsController {
     public List<ProductDTO> getUserBidProducts() throws Exception {
         log.info("Recieved request to return products bidded by user");
         return userService.getBiddedProductsForUser();
+    }
+
+    @DeleteMapping("/api/private/product")
+    public void deleteProduct(@RequestParam Long id) throws UserException, ProductException {
+        log.info("Recieved request to delete product with id {}",id );
+        productService.deleteProduct(id);
     }
 
 }

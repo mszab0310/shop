@@ -3,6 +3,7 @@ package com.mali.shop.service;
 import com.mali.shop.dto.BidDTO;
 import com.mali.shop.dto.ProductDTO;
 import com.mali.shop.dto.UserDataDto;
+import com.mali.shop.exceptions.PasswordResetException;
 import com.mali.shop.exceptions.ProductException;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.User;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -154,5 +156,15 @@ public class ProductService {
         User seller = userRepository.findUserById(id).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(seller, UserDataDto.class);
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) throws UserException, ProductException {
+        User user = userRepository.findUserById(getCurrentUserID()).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
+        Product product = productRepository.findProductByProductId(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
+        if(!product.getSeller_id().equals(user.getId())){
+            throw new ProductException(ProductException.DELETE_OTHERS);
+        }
+        productRepository.removeProductByProductId(id);
     }
 }
