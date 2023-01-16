@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,6 +16,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert, AlertColor } from "@mui/material";
+import { NavigationRoutes } from "src/routes/ROUTES";
 
 function Copyright(props: any) {
   return (
@@ -32,41 +33,34 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function LoginPage() {
+function ForgotPassword() {
   const navigate = useNavigate();
-  const [requestStatusMessage, setRequestStatusMessage] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<AlertColor>("success");
-  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertMessage, setAllertMessage] = useState<string>("");
+  const [showAllert, setShowAlert] = useState<boolean>(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const data = new FormData(event.currentTarget);
-    const username = data.get("username");
-    const password = data.get("password");
-
-    axios
-      .post(
-        "http://localhost:8080/api/auth/signin",
-        { username: username, password: password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res: any) => {
-        const token = res.data.token;
-        localStorage.setItem("jwt", token);
-        setRequestStatusMessage("Login successfull");
+    const email = data.get("email");
+    axios({
+      method: "POST",
+      url: "http://localhost:8080/api/auth/forgot-password",
+      data: email,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(() => {
         setStatus("success");
+        setAllertMessage("We've sent you an email to " + email);
         setShowAlert(true);
         setTimeout(() => {
-          navigate("/home");
-        }, 1000);
+          navigate(NavigationRoutes.RENDERER);
+        }, 3000);
       })
-      .catch((err) => {
-        setRequestStatusMessage(err.response.data.message);
+      .catch((err: any) => {
         setStatus("error");
+        setAllertMessage("Error: " + err.response.data.message);
         setShowAlert(true);
       });
   };
@@ -87,29 +81,20 @@ export default function LoginPage() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Forgot password
           </Typography>
-          {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
+          <Typography component="h4" variant="h5">
+            Please enter your email address
+          </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField margin="normal" required fullWidth id="username" label="Username" name="username" autoComplete="username" autoFocus />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+            <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" autoFocus />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign In
+              Send email
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forgot-password" variant="body2">
-                  Forgot password?
+                <Link href="/" variant="body2">
+                  Have an accoun? Sign in
                 </Link>
               </Grid>
               <Grid item>
@@ -121,7 +106,10 @@ export default function LoginPage() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        {showAllert ? <Alert severity={status}>{alertMessage}</Alert> : <></>}
       </Container>
     </ThemeProvider>
   );
 }
+
+export default ForgotPassword;

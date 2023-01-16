@@ -10,6 +10,7 @@ import ProductsList from "./pages/product/page/list/ProductsList";
 import ProductPage from "./pages/product/page/product-specific/ProductPage";
 import { useState } from "react";
 import { AppContext } from "./context/context";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -32,6 +33,7 @@ function App() {
       <AppContext.Provider value={{ dispatchSearchEvent, searchQuery }}>
         <Routes>
           <Route path={NavigationRoutes.RENDERER} element={<LoginRenderer />} />
+          <Route path={NavigationRoutes.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path={NavigationRoutes.LOGIN} element={<LoginPage />} />
           <Route path={NavigationRoutes.REGISTER} element={<Register />} />
           <Route path={NavigationRoutes.HOME} element={<HomePage />} />
