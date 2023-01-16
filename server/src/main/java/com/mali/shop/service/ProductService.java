@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -104,10 +105,17 @@ public class ProductService {
 
     public void addBidToProduct(BidDTO bid) throws ProductException {
         Long id = bid.getProductId();
+        Long currentUserId = getCurrentUserID();
         BigDecimal bidValue = bid.getBid();
         Product product = productRepository.findProductByProductId(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
         //compareTo returns -1 if bid is less than parameter, 0 if equal, 1 if greater
         // we need it to be greater to be a valid bid
+        if(Objects.equals(product.getSeller_id(), currentUserId)){
+            throw new ProductException(ProductException.BID_ON_OWN_PRODUCT);
+        }
+        if(checkIfProductIsExpired(product)){
+            throw new ProductException(ProductException.PRODUCT_EXPIRED);
+        }
         if(bidValue.compareTo(product.getHighestBid()) > 0 && bidValue.compareTo(product.getStartingPrice()) > 0){
             product.setHighestBid(bidValue);
             product.setHighestBidder_id(getCurrentUserID());

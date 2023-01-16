@@ -6,7 +6,7 @@ import { Bid } from "src/dto/BidDto";
 import { getBidForProduct, getProductById } from "../../ProductApi";
 import "./ProductPage.css";
 import { NavigationRoutes } from "src/routes/ROUTES";
-import { Button, CircularProgress } from "@mui/material";
+import { Alert, AlertColor, Button, CircularProgress } from "@mui/material";
 import { submitBidForProduct } from "./../../ProductApi";
 import { useInterval } from "usehooks-ts";
 import { Client } from "@stomp/stompjs";
@@ -21,6 +21,9 @@ function ProductPage() {
   const [wantToBid, setWantToBid] = useState<boolean>(false);
   const [bid, setBid] = useState<number>(0);
   const [currentBid, setCurrentBid] = useState<number>(0);
+  const [requestStatusMessage, setRequestStatusMessage] = useState<string>("");
+  const [status, setStatus] = useState<AlertColor>("success");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const clientRef = useRef<Client | null>(null);
 
@@ -87,11 +90,21 @@ function ProductPage() {
       console.log(bid);
       clientRef.current?.publish({ destination: "/product_update/" + location.state.id, body: JSON.stringify(bidObj) });
       submitBidForProduct(bidObj)
-        .then(() => console.log("Bid saved"))
-        .catch(() => console.log("bid failed"));
+        .then(() => {
+          setRequestStatusMessage("Bid submitted successfully");
+          setStatus("success");
+          setShowAlert(true);
+        })
+        .catch((err: any) => {
+          setRequestStatusMessage("Bid failed: " + err.response.data.message);
+          setStatus("error");
+          setShowAlert(true);
+        });
     } else {
       setBid(0);
-      alert("Please enter bid bigger then the last bid");
+      setRequestStatusMessage("Please enter a bid bigger than the curren bid");
+      setStatus("error");
+      setShowAlert(true);
     }
   };
 
@@ -140,6 +153,7 @@ function ProductPage() {
                     <p>Enter your bid here</p>
                     <input type={"number"} onChange={getBid} />
                     <button onClick={submitBid}>Submit bid</button>
+                    {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
                   </div>
                 ) : (
                   <></>
