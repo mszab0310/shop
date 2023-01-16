@@ -11,4 +11,5 @@ export type Product = {
   isActive: boolean;
   seller: UserData | null;
   id: number;
+  bidderId?: number | null;
 };

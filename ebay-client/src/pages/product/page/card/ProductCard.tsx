@@ -26,9 +26,16 @@ export default function ProductCard(props: ProductCardProps) {
       <CardActionArea>
         <CardMedia component="img" height="140" image={productImage} alt="product image" />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {props.product.name}
-          </Typography>
+          {props.product.isActive ? (
+            <Typography gutterBottom variant="h5" component="div">
+              {props.product.name}
+            </Typography>
+          ) : (
+            <Typography gutterBottom variant="h5" component="div">
+              {props.product.name} - No longer active
+            </Typography>
+          )}
+
           <Typography variant="body2" color="text.secondary">
             {props.product.description}
           </Typography>

@@ -16,5 +16,6 @@ public class ProductDTO {
     private Date biddingClosesOn;
     private Boolean isActive;
     private UserDataDto sellerData;
+    private Long bidderID;
     private Long id;
 }

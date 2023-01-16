@@ -103,6 +103,7 @@ function ProductPage() {
     } else {
       setBid(0);
       setRequestStatusMessage("Please enter a bid bigger than the curren bid");
+      setCurrentBid(product!.highestBid);
       setStatus("error");
       setShowAlert(true);
     }
@@ -142,7 +143,7 @@ function ProductPage() {
               )}
               <span>{product.description}</span>
               <span>Starting price: {product.startingPrice}</span>
-              <Button disabled={!product.isActive} onClick={enterBiddingButton}>
+              <Button disabled={!product.isActive} onClick={enterBiddingButton} variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Start bidding
               </Button>
               <>
@@ -152,7 +153,9 @@ function ProductPage() {
                     <p className="bidBox">{currentBid === 0 ? "No bids yet" : currentBid}</p>
                     <p>Enter your bid here</p>
                     <input type={"number"} onChange={getBid} />
-                    <button onClick={submitBid}>Submit bid</button>
+                    <Button onClick={submitBid} variant="contained" sx={{ m: 3, mb: 2 }}>
+                      Submit bid
+                    </Button>
                     {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
                   </div>
                 ) : (

@@ -4,6 +4,7 @@ import com.mali.shop.dto.BidDTO;
 import com.mali.shop.dto.ProductDTO;
 import com.mali.shop.enums.ProductCondition;
 import com.mali.shop.service.ProductService;
+import com.mali.shop.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,6 +20,9 @@ public class ProductsController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/api/private/products/new")
     public void addNewProdut(@RequestBody ProductDTO productDTO){
@@ -65,5 +69,11 @@ public class ProductsController {
     public List<ProductDTO> searchProducts(@RequestParam String query) throws Exception {
         log.info("Recieved request to search for products by query {}", query);
         return productService.searchProducts(query);
+    }
+
+    @GetMapping(value = "/api/private/user/products")
+    public List<ProductDTO> searchProducts() throws Exception {
+        log.info("Recieved request to return products listed by user");
+        return userService.getProductsForUser();
     }
 }

@@ -8,6 +8,7 @@ public class AuthHelper {
     public static UserDataDto getCurrentUserData() {
         UserDataDto userDataDto = new UserDataDto();
         ShopUserDetails userDetails = (ShopUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userDataDto.setId(userDetails.getId());
         userDataDto.setFirstname(userDetails.getFirstName());
         userDataDto.setLastName(userDetails.getLastName());
         userDataDto.setUsername(userDetails.getUsername());
