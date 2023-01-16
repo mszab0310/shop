@@ -25,4 +25,6 @@ public class ShopUserDetailsService implements UserDetailsService {
         return new ShopUserDetails(user);
     }
 
+
+
 }

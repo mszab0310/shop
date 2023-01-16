@@ -1,12 +1,11 @@
 package com.mali.shop.service;
 
-import com.mali.shop.dto.JwtDTO;
-import com.mali.shop.dto.RegisterUserDTO;
-import com.mali.shop.dto.SigninDTO;
-import com.mali.shop.dto.UserDataDto;
+import com.mali.shop.dto.*;
 import com.mali.shop.enums.RoleEnum;
 import com.mali.shop.exceptions.UserException;
+import com.mali.shop.model.PasswordResetToken;
 import com.mali.shop.model.Role;
+import com.mali.shop.repository.PasswordTokenRepository;
 import com.mali.shop.util.ShopUserDetails;
 import com.mali.shop.model.User;
 import com.mali.shop.repository.RoleRepository;
@@ -23,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +42,19 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private PasswordTokenRepository passwordTokenRepository;
+
+    @Autowired
     private JwtUtil jwtUtil;
+
+    private final String TOPIC = "email-topic";
+
+    private final KafkaProducerService producerService;
+
+    public AuthService(KafkaProducerService producerService) {
+        this.producerService = producerService;
+    }
+
 
     public void registerUser(RegisterUserDTO newUser) throws UserException {
         if(newUser.getEmail().isEmpty() || newUser.getFirstName().isEmpty() ||
@@ -99,8 +111,55 @@ public class AuthService {
         }catch (AuthenticationException authentication){
             throw new UserException(UserException.BAD_CREDENTIALS);
         }
+    }
+
+    public PasswordResetToken createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordTokenRepository.save(myToken);
+        return myToken;
+    }
+
+    public User findUserByEmail(String email) throws UserException{
+        User user = userRepository.findByEmail(email);
+        if(user == null)
+            throw new UserException(UserException.USER_NOT_FOUND);
+        return user;
+    }
+
+
+    public void notifyKafka(PasswordResetToken token, String email, String appUrl){
+        EmailDTO emailDTO = new EmailDTO();
+        emailDTO.setEmail(email);
+        String message = appUrl + "?token=" + token.getToken();
+        emailDTO.setMessage(message);
+        log.info("Trying to send notification to email server via kafka");
+        producerService.sendMessage(TOPIC, emailDTO);
 
     }
+
+    public boolean validatePasswordResetToken(String token) {
+        final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+
+        return isTokenFound(passToken) && !isTokenExpired(passToken);
+    }
+
+    public PasswordResetToken findTokenByToken(String token){
+        return passwordTokenRepository.findByToken(token);
+    }
+
+    public void updateToken(PasswordResetToken token){
+        passwordTokenRepository.save(token);
+    }
+
+    private boolean isTokenFound(PasswordResetToken passToken) {
+        return passToken != null;
+    }
+
+    private boolean isTokenExpired(PasswordResetToken passToken) {
+        final Calendar cal = Calendar.getInstance();
+        return passToken.getExpiryDate().before(cal.getTime());
+    }
+
 }
 
 

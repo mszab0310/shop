@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert, AlertColor } from "@mui/material";
 import { NavigationRoutes } from "src/routes/ROUTES";
-import { EmailDto } from "src/dto/EmailDto";
 
 function Copyright(props: any) {
   return (
@@ -34,45 +33,23 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-function ForgotPassword() {
-  const navigate = useNavigate();
+function ResetPassword() {
+  const [requestStatusMessage, setRequestStatusMessage] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<AlertColor>("success");
-  const [alertMessage, setAllertMessage] = useState<string>("");
-  const [showAllert, setShowAlert] = useState<boolean>(false);
-  const [resetToken, setResetToken] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-
-  const setEmailAddress = (e: any) => {
-    setEmail(e.target.value);
-  };
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Your email " + email);
-    const emailDto: EmailDto = { email: email };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/api/auth/resetPassword",
-      data: emailDto,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res: any) => {
-        setStatus("success");
-        setAllertMessage("We've sent you an email to " + email);
-        setShowAlert(true);
-        setResetToken(res.data);
-        console.log(res.data);
-        // setTimeout(() => {
-        //   navigate(NavigationRoutes.RENDERER);
-        // }, 3000);
-      })
-      .catch((err: any) => {
-        setStatus("error");
-        setAllertMessage("Error: " + err.response.data.message);
-        setShowAlert(true);
-      });
+    const data = new FormData(event.currentTarget);
+    const newPassword = data.get("newPassword");
+    const confirmPassword = data.get("confirmPassword");
+    if (newPassword !== confirmPassword) {
+      setRequestStatusMessage("Passwords don't match");
+      setStatus("warning");
+      setShowAlert(true);
+    } else {
+      //post request with new password
+    }
   };
 
   return (
@@ -91,45 +68,40 @@ function ForgotPassword() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Forgot password
+            Reset password
           </Typography>
-          <Typography component="h4" variant="h5">
-            Please enter your email address
-          </Typography>
+          {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
+              id="new-password"
+              label="New Password"
+              type="password"
+              name="newPassword"
+              autoComplete="new-password"
               autoFocus
-              onChange={setEmailAddress}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              id="confirm-password"
+              autoComplete="new-password"
             />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Send email
+              Change password
             </Button>
-            <Grid container>
-              <Grid item xs sx={{ marginRight: "20px" }}>
-                <Link href="/" variant="body2">
-                  Have an accoun? Sign in
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
-        {showAllert ? <Alert severity={status}>{alertMessage}</Alert> : <></>}
       </Container>
     </ThemeProvider>
   );
 }
 
-export default ForgotPassword;
+export default ResetPassword;

@@ -11,6 +11,7 @@ import ProductPage from "./pages/product/page/product-specific/ProductPage";
 import { useState } from "react";
 import { AppContext } from "./context/context";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -34,6 +35,7 @@ function App() {
         <Routes>
           <Route path={NavigationRoutes.RENDERER} element={<LoginRenderer />} />
           <Route path={NavigationRoutes.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path={NavigationRoutes.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={NavigationRoutes.LOGIN} element={<LoginPage />} />
           <Route path={NavigationRoutes.REGISTER} element={<Register />} />
           <Route path={NavigationRoutes.HOME} element={<HomePage />} />
