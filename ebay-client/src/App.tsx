@@ -3,7 +3,6 @@ import { NavigationRoutes } from "./routes/ROUTES";
 import LoginRenderer from "./util/LoginRenderer";
 import LoginPage from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import HomePage from "./pages/home/HomePage";
 import UserPage from "./pages/user/UserPage";
 import AddNewProduct from "./pages/product/add-new/AddNewProduct";
 import ProductsList from "./pages/product/page/list/ProductsList";
@@ -39,7 +38,6 @@ function App() {
           <Route path={NavigationRoutes.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={NavigationRoutes.LOGIN} element={<LoginPage />} />
           <Route path={NavigationRoutes.REGISTER} element={<Register />} />
-          <Route path={NavigationRoutes.HOME} element={<HomePage />} />
           <Route path={NavigationRoutes.PRODUCTS} element={<ProductsList />} />
           <Route element={<ProtectedRoutes />}>
             <Route path={NavigationRoutes.PRODUCT}>

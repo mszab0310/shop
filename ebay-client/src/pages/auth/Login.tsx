@@ -16,6 +16,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert, AlertColor } from "@mui/material";
+import { NavigationRoutes } from "src/routes/ROUTES";
 
 function Copyright(props: any) {
   return (
@@ -61,7 +62,7 @@ export default function LoginPage() {
         setStatus("success");
         setShowAlert(true);
         setTimeout(() => {
-          navigate("/home");
+          navigate(NavigationRoutes.PRODUCTS);
         }, 1000);
       })
       .catch((err) => {

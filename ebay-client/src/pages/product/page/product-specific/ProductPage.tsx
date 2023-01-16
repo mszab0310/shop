@@ -129,7 +129,9 @@ function ProductPage() {
               )}
               <span>{product.description}</span>
               <span>Starting price: {product.startingPrice}</span>
-              <Button onClick={enterBiddingButton}>Start bidding</Button>
+              <Button disabled={!product.isActive} onClick={enterBiddingButton}>
+                Start bidding
+              </Button>
               <>
                 {wantToBid === true ? (
                   <div>

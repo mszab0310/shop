@@ -17,7 +17,7 @@ function LoginRenderer() {
         localStorage.removeItem("jwt");
         navigate(NavigationRoutes.LOGIN);
       } else {
-        navigate(NavigationRoutes.HOME);
+        navigate(NavigationRoutes.PRODUCTS);
       }
     } else {
       navigate(NavigationRoutes.LOGIN);

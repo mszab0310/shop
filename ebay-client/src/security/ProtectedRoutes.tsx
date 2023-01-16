@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { NavigationRoutes } from "src/routes/ROUTES";
 const useAuth = () => {
   let isLoggedIn = false;
-  if (localStorage.getItem("token") != null) {
+  if (localStorage.getItem("jwt") != null) {
     isLoggedIn = true;
   }
   const user = { loggedIn: isLoggedIn };

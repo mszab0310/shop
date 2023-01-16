@@ -95,7 +95,7 @@ export default function Navbar() {
   };
 
   const navigateToHome = () => {
-    navigate(NavigationRoutes.HOME);
+    navigate(NavigationRoutes.PRODUCTS);
   };
 
   const onClickProducts = () => {

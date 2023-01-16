@@ -3,7 +3,6 @@ export enum NavigationRoutes {
   LOGIN = "/login",
   FORGOT_PASSWORD = "/forgot-password",
   RESET_PASSWORD = "/reset-password",
-  HOME = "/home",
   REGISTER = "/register",
   PRODUCTS = "/products",
   PRODUCT = "/product",
