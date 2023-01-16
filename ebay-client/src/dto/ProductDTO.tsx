@@ -9,7 +9,7 @@ export type Product = {
   listedAt: Date;
   biddingClosesOn: Date;
   isActive: boolean;
-  seller: UserData | null;
+  sellerData: UserData | null;
   id: number;
   bidderId?: number | null;
 };

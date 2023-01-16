@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { UserData } from "../../dto/UserData";
 import DataTable from "./DataTable";
-import { getCurrentUser, getProductsForUser } from "./userApi";
+import { getBidProductsForUser, getCurrentUser, getProductsForUser } from "./userApi";
 import "./UserPage.css";
 import { Product } from "src/dto/ProductDTO";
 import { Typography } from "@mui/material";
@@ -14,6 +14,7 @@ function UserPage() {
   const [userdata, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<Product[]>([]);
+  const [bidProducts, setBidProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     getCurrentUser().then((resp) => {
@@ -23,6 +24,9 @@ function UserPage() {
     });
     getProductsForUser().then((res) => {
       setProducts(res.data);
+    });
+    getBidProductsForUser().then((res) => {
+      setBidProducts(res.data);
     });
   }, []);
 
@@ -64,7 +68,7 @@ function UserPage() {
             <Typography>Your biddings</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <DataTable products={products} bid={true} uid={userdata?.id} />
+            <DataTable products={bidProducts} bid={true} uid={userdata?.id} />
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>

@@ -7,6 +7,7 @@ import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.User;
 import com.mali.shop.model.product.Product;
 import com.mali.shop.repository.ProductRepository;
+import com.mali.shop.repository.UserProductBidsRepository;
 import com.mali.shop.repository.UserRepository;
 import com.mali.shop.util.ShopUserDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +27,33 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserProductBidsRepository userProductBidsRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
 
     public List<ProductDTO> getProductsForUser() throws UserException {
         User user = userRepository.findUserById(getCurrentUserID()).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
         List<Product> products = productRepository.findProductBySeller_id(user.getId());
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        products.forEach(product -> {
+            try {
+                if (product.getBiddingClosesOn().before(new Date())) {
+                    product.setActive(false);
+                    productRepository.save(product);
+                }
+                productDTOS.add(daoToDTO(product));
+            } catch (UserException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return productDTOS;
+    }
+
+    public List<ProductDTO> getBiddedProductsForUser() throws UserException {
+        User user = userRepository.findUserById(getCurrentUserID()).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
+        List<Product> products = userProductBidsRepository.findAllProductsByUser(user);
         List<ProductDTO> productDTOS = new ArrayList<>();
         products.forEach(product -> {
             try {

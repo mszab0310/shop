@@ -11,6 +11,8 @@ import { submitBidForProduct } from "./../../ProductApi";
 import { useInterval } from "usehooks-ts";
 import { Client } from "@stomp/stompjs";
 import axios, { Axios } from "axios";
+import { getCurrentUser } from "src/pages/user/userApi";
+import { UserData } from "src/dto/UserData";
 
 function ProductPage() {
   const location = useLocation();
@@ -24,12 +26,17 @@ function ProductPage() {
   const [requestStatusMessage, setRequestStatusMessage] = useState<string>("");
   const [status, setStatus] = useState<AlertColor>("success");
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [userdata, setUserData] = useState<UserData | null>(null);
 
   const clientRef = useRef<Client | null>(null);
 
   const SOCKET_URL = "ws://localhost:8080/ws-message";
 
   useEffect(() => {
+    getCurrentUser().then((resp) => {
+      setUserData(resp.data);
+    });
+
     getProductById(location.state.id)
       .then((res) => {
         setProduct(res.data);
@@ -57,7 +64,6 @@ function ProductPage() {
       onConnect: onConnected,
       onDisconnect: onDisconnected,
     });
-    clientRef.current.activate();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -78,6 +84,7 @@ function ProductPage() {
 
   const enterBiddingButton = () => {
     setWantToBid(true);
+    clientRef.current!.activate();
   };
 
   const getBid = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,27 +92,36 @@ function ProductPage() {
   };
 
   const submitBid = () => {
-    if (bid > product!.highestBid && bid > product!.startingPrice) {
-      const bidObj: Bid = { bid: bid, productId: location.state.id };
-      console.log(bid);
-      clientRef.current?.publish({ destination: "/product_update/" + location.state.id, body: JSON.stringify(bidObj) });
-      submitBidForProduct(bidObj)
-        .then(() => {
-          setRequestStatusMessage("Bid submitted successfully");
-          setStatus("success");
-          setShowAlert(true);
-        })
-        .catch((err: any) => {
-          setRequestStatusMessage("Bid failed: " + err.response.data.message);
-          setStatus("error");
-          setShowAlert(true);
-        });
-    } else {
-      setBid(0);
-      setRequestStatusMessage("Please enter a bid bigger than the curren bid");
-      setCurrentBid(product!.highestBid);
+    console.log("Check: ");
+    console.log(userdata);
+    console.log(product?.sellerData);
+    if (userdata!.id === product!.sellerData!.id) {
+      setRequestStatusMessage("Cannot bid on own product");
       setStatus("error");
       setShowAlert(true);
+    } else {
+      if (bid > product!.highestBid && bid > product!.startingPrice) {
+        const bidObj: Bid = { bid: bid, productId: location.state.id };
+        console.log(bid);
+        clientRef.current?.publish({ destination: "/product_update/" + location.state.id, body: JSON.stringify(bidObj) });
+        submitBidForProduct(bidObj)
+          .then(() => {
+            setRequestStatusMessage("Bid submitted successfully");
+            setStatus("success");
+            setShowAlert(true);
+          })
+          .catch((err: any) => {
+            setRequestStatusMessage("Bid failed: " + err.response.data.message);
+            setStatus("error");
+            setShowAlert(true);
+          });
+      } else {
+        setBid(0);
+        setRequestStatusMessage("Please enter a bid bigger than the curren bid");
+        setCurrentBid(product!.highestBid);
+        setStatus("error");
+        setShowAlert(true);
+      }
     }
   };
 

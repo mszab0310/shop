@@ -27,7 +27,7 @@ function AddNewProduct() {
       listedAt: new Date(Date.now()),
       biddingClosesOn: new Date(selectedDate!),
       isActive: true,
-      seller: null,
+      sellerData: null,
       id: -1,
     };
     addNewProduct(product)

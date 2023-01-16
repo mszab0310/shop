@@ -19,3 +19,14 @@ export const getProductsForUser = async (): Promise<AxiosResponse<Product[]>> =>
     },
   });
 };
+export const getBidProductsForUser = async (): Promise<AxiosResponse<Product[]>> => {
+  const token = localStorage.getItem("jwt");
+  const header = "Bearer " + token;
+  return await axios({
+    method: "get",
+    url: "http://localhost:8080/api/private/user/products/bids",
+    headers: {
+      Authorization: header,
+    },
+  });
+};

@@ -6,8 +6,10 @@ import com.mali.shop.dto.UserDataDto;
 import com.mali.shop.exceptions.ProductException;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.User;
+import com.mali.shop.model.UserProductBids;
 import com.mali.shop.model.product.Product;
 import com.mali.shop.repository.ProductRepository;
+import com.mali.shop.repository.UserProductBidsRepository;
 import com.mali.shop.repository.UserRepository;
 import com.mali.shop.util.ShopUserDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,9 @@ public class ProductService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserProductBidsRepository userProductBidsRepository;
 
     public void addProduct(ProductDTO newProduct) {
         // maybe do some checks if product name/description is SFW/appropriate
@@ -103,9 +108,10 @@ public class ProductService {
         return productDTOS;
     }
 
-    public void addBidToProduct(BidDTO bid) throws ProductException {
+    public void addBidToProduct(BidDTO bid) throws ProductException, UserException {
         Long id = bid.getProductId();
         Long currentUserId = getCurrentUserID();
+        User user = userRepository.findUserById(currentUserId).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
         BigDecimal bidValue = bid.getBid();
         Product product = productRepository.findProductByProductId(id).orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
         //compareTo returns -1 if bid is less than parameter, 0 if equal, 1 if greater
@@ -117,6 +123,10 @@ public class ProductService {
             throw new ProductException(ProductException.PRODUCT_EXPIRED);
         }
         if(bidValue.compareTo(product.getHighestBid()) > 0 && bidValue.compareTo(product.getStartingPrice()) > 0){
+            UserProductBids userProductBids = new UserProductBids();
+            userProductBids.setProduct(product);
+            userProductBids.setUser(user);
+            userProductBidsRepository.save(userProductBids);
             product.setHighestBid(bidValue);
             product.setHighestBidder_id(getCurrentUserID());
             productRepository.save(product);

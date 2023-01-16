@@ -72,8 +72,15 @@ public class ProductsController {
     }
 
     @GetMapping(value = "/api/private/user/products")
-    public List<ProductDTO> searchProducts() throws Exception {
+    public List<ProductDTO> searchUserProducts() throws Exception {
         log.info("Recieved request to return products listed by user");
         return userService.getProductsForUser();
     }
+
+    @GetMapping(value = "/api/private/user/products/bids")
+    public List<ProductDTO> getUserBidProducts() throws Exception {
+        log.info("Recieved request to return products bidded by user");
+        return userService.getBiddedProductsForUser();
+    }
+
 }
