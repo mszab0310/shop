@@ -183,6 +183,7 @@ public class AuthService {
         if(encodePassword.equals(user.getPassword())){
             throw new PasswordResetException(PasswordResetException.PASSWORDS_MATCH);
         }
+        //TODO: verify if reset token was created for user, if it is valid and has not expired yet
         user.setPassword(encodePassword);
         log.info("Password reset successfully");
         userRepository.save(user);
