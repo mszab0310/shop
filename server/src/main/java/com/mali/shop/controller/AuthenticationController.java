@@ -2,10 +2,10 @@ package com.mali.shop.controller;
 
 
 import com.mali.shop.dto.*;
+import com.mali.shop.exceptions.PasswordResetException;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.PasswordResetToken;
 import com.mali.shop.model.User;
-import com.mali.shop.repository.PasswordTokenRepository;
 import com.mali.shop.service.AuthService;
 import com.mali.shop.util.AuthHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @RestController
@@ -70,5 +69,16 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping("/user/forgot-password/verify")
+    public boolean verifyIfTokenWasVerified(@RequestParam String token) throws PasswordResetException {
+        log.info("Received request to verify if token has been verified or not {}", token);
+        return authService.verifyTokenAfterReset(token);
+    }
+
+    @PostMapping(value = "/user/reset-password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void resetPasswordData(@RequestBody ResetPasswordDto resetPasswordDto) throws PasswordResetException, UserException {
+        log.info("Received request to reset password for {} ",resetPasswordDto.getEmail());
+        authService.changePassword(resetPasswordDto);
+    }
 
 }

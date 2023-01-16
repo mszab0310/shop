@@ -2,6 +2,7 @@ package com.mali.shop.service;
 
 import com.mali.shop.dto.*;
 import com.mali.shop.enums.RoleEnum;
+import com.mali.shop.exceptions.PasswordResetException;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.PasswordResetToken;
 import com.mali.shop.model.Role;
@@ -57,8 +58,8 @@ public class AuthService {
 
 
     public void registerUser(RegisterUserDTO newUser) throws UserException {
-        if(newUser.getEmail().isEmpty() || newUser.getFirstName().isEmpty() ||
-           newUser.getLastName().isEmpty() || newUser.getUsername().isEmpty() || newUser.getPassword().isEmpty()){
+        if (newUser.getEmail().isEmpty() || newUser.getFirstName().isEmpty() ||
+                newUser.getLastName().isEmpty() || newUser.getUsername().isEmpty() || newUser.getPassword().isEmpty()) {
             throw new UserException(UserException.INCOMPLETE_FIELDS);
         }
         log.info("Trying to register user with email {} and username {}", newUser.getEmail(), newUser.getUsername());
@@ -83,12 +84,12 @@ public class AuthService {
         }
     }
 
-    public JwtDTO doSignin(SigninDTO signinDTO) throws UserException{
+    public JwtDTO doSignin(SigninDTO signinDTO) throws UserException {
         log.info("Trying to sign in user with username {}", signinDTO.getUsername());
-        if(signinDTO.getUsername().isEmpty() || signinDTO.getPassword().isEmpty()){
+        if (signinDTO.getUsername().isEmpty() || signinDTO.getPassword().isEmpty()) {
             throw new UserException(UserException.INCOMPLETE_FIELDS);
         }
-        if(!userRepository.existsByUsername(signinDTO.getUsername())){
+        if (!userRepository.existsByUsername(signinDTO.getUsername())) {
             throw new UserException(UserException.USER_NOT_FOUND);
         }
         try {
@@ -108,7 +109,7 @@ public class AuthService {
             log.info("User signed in with username {}", userDetails.getUsername());
 
             return response;
-        }catch (AuthenticationException authentication){
+        } catch (AuthenticationException authentication) {
             throw new UserException(UserException.BAD_CREDENTIALS);
         }
     }
@@ -119,15 +120,15 @@ public class AuthService {
         return myToken;
     }
 
-    public User findUserByEmail(String email) throws UserException{
+    public User findUserByEmail(String email) throws UserException {
         User user = userRepository.findByEmail(email);
-        if(user == null)
+        if (user == null)
             throw new UserException(UserException.USER_NOT_FOUND);
         return user;
     }
 
 
-    public void notifyKafka(PasswordResetToken token, String email, String appUrl){
+    public void notifyKafka(PasswordResetToken token, String email, String appUrl) {
         EmailDTO emailDTO = new EmailDTO();
         emailDTO.setEmail(email);
         String message = appUrl + "?token=" + token.getToken();
@@ -143,11 +144,11 @@ public class AuthService {
         return isTokenFound(passToken) && !isTokenExpired(passToken);
     }
 
-    public PasswordResetToken findTokenByToken(String token){
+    public PasswordResetToken findTokenByToken(String token) {
         return passwordTokenRepository.findByToken(token);
     }
 
-    public void updateToken(PasswordResetToken token){
+    public void updateToken(PasswordResetToken token) {
         passwordTokenRepository.save(token);
     }
 
@@ -158,6 +159,33 @@ public class AuthService {
     private boolean isTokenExpired(PasswordResetToken passToken) {
         final Calendar cal = Calendar.getInstance();
         return passToken.getExpiryDate().before(cal.getTime());
+    }
+
+    public boolean verifyTokenAfterReset(String token) throws PasswordResetException {
+        PasswordResetToken passwordResetToken = passwordTokenRepository.findByToken(token);
+        if (passwordResetToken == null) {
+            throw new PasswordResetException(PasswordResetException.TOKEN_NOT_FOUND);
+        } else {
+            return passwordResetToken.isVerified();
+        }
+    }
+
+    public void changePassword(ResetPasswordDto resetPasswordDto) throws UserException, PasswordResetException {
+        log.info("Trying to validate password for reseting");
+        User user = userRepository.findByEmail(resetPasswordDto.getEmail());
+        if(user == null) {
+            throw new UserException(UserException.USER_NOT_FOUND);
+        }
+        if(!resetPasswordDto.getNewPassword().equals(resetPasswordDto.getConfirmPassword())){
+            throw new PasswordResetException(PasswordResetException.NEW_PASSWORD_DIFFERENT);
+        }
+        String encodePassword = passwordEncoder.encode(resetPasswordDto.getNewPassword());
+        if(encodePassword.equals(user.getPassword())){
+            throw new PasswordResetException(PasswordResetException.PASSWORDS_MATCH);
+        }
+        user.setPassword(encodePassword);
+        log.info("Password reset successfully");
+        userRepository.save(user);
     }
 
 }

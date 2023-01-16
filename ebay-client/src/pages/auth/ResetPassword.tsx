@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert, AlertColor } from "@mui/material";
 import { NavigationRoutes } from "src/routes/ROUTES";
+import { ResetPasswordDTO } from "src/dto/ResetPassword";
 
 function Copyright(props: any) {
   return (
@@ -37,21 +38,53 @@ function ResetPassword() {
   const [requestStatusMessage, setRequestStatusMessage] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<AlertColor>("success");
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const newPassword = data.get("newPassword");
-    const confirmPassword = data.get("confirmPassword");
     if (newPassword !== confirmPassword) {
       setRequestStatusMessage("Passwords don't match");
       setStatus("warning");
       setShowAlert(true);
     } else {
-      //post request with new password
+      const resetPasswordDto: ResetPasswordDTO = { email: email, newPassword: newPassword, confirmPassword: confirmPassword };
+      axios({
+        method: "post",
+        url: "http://localhost:8080/api/auth/user/reset-password",
+        data: resetPasswordDto,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(() => {
+          setRequestStatusMessage("Password reset successfully");
+          setStatus("success");
+          setShowAlert(true);
+          setTimeout(() => {
+            navigate(NavigationRoutes.LOGIN);
+          }, 3000);
+        })
+        .catch((err: any) => {
+          setStatus("error");
+          setRequestStatusMessage("Error: " + err.response.data.message);
+          setShowAlert(true);
+        });
     }
   };
 
+  const getEmail = (event: any) => {
+    setEmail(event.target.value);
+  };
+
+  const getNewPassword = (event: any) => {
+    setNewPassword(event.target.value);
+  };
+  const getConfirmPassword = (event: any) => {
+    setConfirmPassword(event.target.value);
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -71,7 +104,9 @@ function ResetPassword() {
             Reset password
           </Typography>
           {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
+
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" autoFocus onChange={getEmail} />
             <TextField
               margin="normal"
               required
@@ -82,6 +117,7 @@ function ResetPassword() {
               name="newPassword"
               autoComplete="new-password"
               autoFocus
+              onChange={getNewPassword}
             />
             <TextField
               margin="normal"
@@ -92,6 +128,7 @@ function ResetPassword() {
               type="password"
               id="confirm-password"
               autoComplete="new-password"
+              onChange={getConfirmPassword}
             />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Change password

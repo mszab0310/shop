@@ -36,7 +36,7 @@ const theme = createTheme();
 
 function ForgotPassword() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<AlertColor>("success");
+  const [status, setStatus] = useState<AlertColor>("error");
   const [alertMessage, setAllertMessage] = useState<string>("");
   const [showAllert, setShowAlert] = useState<boolean>(false);
   const [resetToken, setResetToken] = useState<string>("");
@@ -64,15 +64,37 @@ function ForgotPassword() {
         setShowAlert(true);
         setResetToken(res.data);
         console.log(res.data);
-        // setTimeout(() => {
-        //   navigate(NavigationRoutes.RENDERER);
-        // }, 3000);
       })
       .catch((err: any) => {
         setStatus("error");
         setAllertMessage("Error: " + err.response.data.message);
         setShowAlert(true);
       });
+  };
+
+  const verifiyEmail = (event: any) => {
+    event.preventDefault();
+    axios({
+      method: "get",
+      url: "http://localhost:8080/api/auth/user/forgot-password/verify",
+      params: {
+        token: resetToken,
+      },
+    }).then((res: any) => {
+      console.log(res.data);
+      if (res.data === true) {
+        setStatus("success");
+        setAllertMessage("Email verified");
+        setShowAlert(true);
+        setTimeout(() => {
+          navigate(NavigationRoutes.RESET_PASSWORD);
+        }, 3000);
+      } else {
+        setStatus("error");
+        setAllertMessage("Email not verified");
+        setShowAlert(true);
+      }
+    });
   };
 
   return (
@@ -110,6 +132,9 @@ function ForgotPassword() {
             />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Send email
+            </Button>
+            <Button disabled={status !== "success"} onClick={verifiyEmail} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Verify
             </Button>
             <Grid container>
               <Grid item xs sx={{ marginRight: "20px" }}>
