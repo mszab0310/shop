@@ -4,8 +4,9 @@ export enum NavigationRoutes {
   FORGOT_PASSWORD = "/forgot-password",
   RESET_PASSWORD = "/reset-password",
   REGISTER = "/register",
-  PRODUCTS = "/products",
-  PRODUCT = "/product",
-  NEW_PRODUCT = "/product/new",
+  INTERNSHIPS = "/internships",
+  INTERNSHIP = "/internship",
+  NEW_INTERNSHIP = "/internship/new",
   USER = "/user",
 }
+

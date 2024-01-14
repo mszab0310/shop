@@ -9,4 +9,5 @@ public class UserDataDto {
     private String firstname;
     private String lastName;
     private String email;
+    private String role;
 }

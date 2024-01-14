@@ -62,7 +62,7 @@ export default function LoginPage() {
         setStatus("success");
         setShowAlert(true);
         setTimeout(() => {
-          navigate(NavigationRoutes.PRODUCTS);
+          navigate(NavigationRoutes.INTERNSHIPS);
         }, 1000);
       })
       .catch((err) => {

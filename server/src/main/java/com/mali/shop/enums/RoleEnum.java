@@ -1,11 +1,12 @@
 package com.mali.shop.enums;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public enum RoleEnum {
     ROLE_USER(Names.USER),
-    ROLE_ADMIN(Names.ADMIN);
+    ROLE_ADMIN(Names.ADMIN),
+    ROLE_RECRUITER(Names.RECRUITER);
+
     public String name;
 
     RoleEnum(String name) {
@@ -23,5 +24,6 @@ public enum RoleEnum {
     public static class Names {
         public static final String USER = "ROLE_USER";
         public static final String ADMIN = "ROLE_ADMIN";
+        public static final String RECRUITER = "ROLE_RECRUITER";
     }
 }

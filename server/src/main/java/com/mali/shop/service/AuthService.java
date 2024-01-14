@@ -6,13 +6,15 @@ import com.mali.shop.exceptions.PasswordResetException;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.PasswordResetToken;
 import com.mali.shop.model.Role;
-import com.mali.shop.repository.PasswordTokenRepository;
-import com.mali.shop.util.ShopUserDetails;
 import com.mali.shop.model.User;
+import com.mali.shop.model.UserCompany;
+import com.mali.shop.repository.PasswordTokenRepository;
 import com.mali.shop.repository.RoleRepository;
+import com.mali.shop.repository.UserCompanyRepository;
 import com.mali.shop.repository.UserRepository;
 import com.mali.shop.security.UserPasswordEncoder;
 import com.mali.shop.util.JwtUtil;
+import com.mali.shop.util.ShopUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,6 +46,8 @@ public class AuthService {
 
     @Autowired
     private PasswordTokenRepository passwordTokenRepository;
+    @Autowired
+    private UserCompanyRepository userCompanyRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -56,8 +60,27 @@ public class AuthService {
         this.producerService = producerService;
     }
 
+    public void registerRecruiter(RegisterRecruiterDTO newUser) throws UserException {
+        if (checkNewUser(newUser)) {
+            User user = createUser(newUser, RoleEnum.ROLE_RECRUITER);
+            UserCompany userCompany = new UserCompany();
+            userCompany.setUser(user);
+            userCompany.setCompanyName(newUser.getCompanyName());
+            userCompany.setCui(newUser.getCui());
+            log.info("Registering company with {} and cui {}", newUser.getCompanyName(),newUser.getCui());
+            userCompanyRepository.save(userCompany);
+            log.info("Recruiter registered with email {} and username {}", user.getEmail(), user.getUsername());
+        }
+    }
 
     public void registerUser(RegisterUserDTO newUser) throws UserException {
+        if (checkNewUser(newUser)) {
+            User user = createUser(newUser, RoleEnum.ROLE_USER);
+            log.info("User registered with email {} and username {}", user.getEmail(), user.getUsername());
+        }
+    }
+
+    private boolean checkNewUser(RegisterUserDTO newUser) throws UserException {
         if (newUser.getEmail().isEmpty() || newUser.getFirstName().isEmpty() ||
                 newUser.getLastName().isEmpty() || newUser.getUsername().isEmpty() || newUser.getPassword().isEmpty()) {
             throw new UserException(UserException.INCOMPLETE_FIELDS);
@@ -69,19 +92,21 @@ public class AuthService {
         } else if (userRepository.existsByUsername(newUser.getUsername())) {
             log.error(UserException.USERNAME_TAKEN + newUser.getUsername());
             throw new UserException(UserException.USERNAME_TAKEN + newUser.getUsername());
-        } else {
-            User user = new User();
-            user.setEmail(newUser.getEmail());
-            user.setUsername(newUser.getUsername());
-            user.setFirstName(newUser.getFirstName());
-            user.setLastName(newUser.getLastName());
-            user.setPassword(passwordEncoder.encode(newUser.getPassword()));
-            user.setActive(true);
-            Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER);
-            user.setRoles(Collections.singleton(userRole));
-            userRepository.save(user);
-            log.info("User registered with email {} and username {}", user.getEmail(), user.getUsername());
         }
+        return true;
+    }
+
+    private User createUser(RegisterUserDTO newUser, RoleEnum role) {
+        User user = new User();
+        user.setEmail(newUser.getEmail());
+        user.setUsername(newUser.getUsername());
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        user.setActive(true);
+        user.setRole(role.getName());
+        userRepository.save(user);
+        return user;
     }
 
     public JwtDTO doSignin(SigninDTO signinDTO) throws UserException {
@@ -173,14 +198,14 @@ public class AuthService {
     public void changePassword(ResetPasswordDto resetPasswordDto) throws UserException, PasswordResetException {
         log.info("Trying to validate password for reseting");
         User user = userRepository.findByEmail(resetPasswordDto.getEmail());
-        if(user == null) {
+        if (user == null) {
             throw new UserException(UserException.USER_NOT_FOUND);
         }
-        if(!resetPasswordDto.getNewPassword().equals(resetPasswordDto.getConfirmPassword())){
+        if (!resetPasswordDto.getNewPassword().equals(resetPasswordDto.getConfirmPassword())) {
             throw new PasswordResetException(PasswordResetException.NEW_PASSWORD_DIFFERENT);
         }
         String encodePassword = passwordEncoder.encode(resetPasswordDto.getNewPassword());
-        if(encodePassword.equals(user.getPassword())){
+        if (encodePassword.equals(user.getPassword())) {
             throw new PasswordResetException(PasswordResetException.PASSWORDS_MATCH);
         }
         //TODO: verify if reset token was created for user, if it is valid and has not expired yet

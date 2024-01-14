@@ -5,9 +5,8 @@ import jwt_decode from "jwt-decode";
 
 function LoginRenderer() {
   const navigate = useNavigate();
-  //checks wheter the jw token stored on local storage is still active or not
+  //checks whether the jw token stored on local storage is still active or not
   useEffect(() => {
-    console.log("verifying jwt");
     const token = localStorage.getItem("jwt");
     if (token !== null) {
       var decodedToken: any = jwt_decode(token);
@@ -17,10 +16,10 @@ function LoginRenderer() {
         localStorage.removeItem("jwt");
         navigate(NavigationRoutes.LOGIN);
       } else {
-        navigate(NavigationRoutes.PRODUCTS);
+        navigate(NavigationRoutes.INTERNSHIPS);
       }
     } else {
-      navigate(NavigationRoutes.LOGIN);
+      navigate(NavigationRoutes.INTERNSHIPS);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

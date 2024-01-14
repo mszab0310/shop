@@ -1,6 +1,5 @@
 package com.mali.shop.util;
 
-import com.mali.shop.model.Role;
 import com.mali.shop.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class ShopUserDetails implements UserDetails {
     private User user;
@@ -20,10 +18,10 @@ public class ShopUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> roles = user.getRoles();
+        String role = user.getRole();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        roles.forEach( role -> authorities.add(new SimpleGrantedAuthority(role.getName().name())) );
+        authorities.add(new SimpleGrantedAuthority(role));
         return authorities;
     }
 
@@ -37,11 +35,11 @@ public class ShopUserDetails implements UserDetails {
         return user.getUsername();
     }
 
-    public String getFirstName(){
+    public String getFirstName() {
         return user.getFirstName();
     }
 
-    public String getLastName(){
+    public String getLastName() {
         return user.getLastName();
     }
 
@@ -65,14 +63,15 @@ public class ShopUserDetails implements UserDetails {
         return user.isActive();
     }
 
-    public Long getId(){
+    public Long getId() {
         return user.getId();
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return user.getEmail();
     }
-    public Set<Role> getRoles(){
-        return user.getRoles();
+
+    public String getRole() {
+        return user.getRole();
     }
 }

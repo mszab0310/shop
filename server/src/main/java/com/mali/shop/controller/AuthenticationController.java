@@ -23,47 +23,49 @@ public class AuthenticationController {
     @Autowired
     private AuthService authService;
 
-
-
-
     @PostMapping(value = "/register", consumes = "application/json")
     public void registerUser(@RequestBody RegisterUserDTO newUser) throws UserException {
         authService.registerUser(newUser);
     }
 
+    @PostMapping(value = "/register/recruiter", consumes = "application/json")
+    public void registerRecruiter(@RequestBody RegisterRecruiterDTO newUser) throws UserException {
+        authService.registerRecruiter(newUser);
+    }
+
     @PostMapping(value = "/signin", consumes = "application/json")
-    public JwtDTO signIn(@RequestBody SigninDTO signinDTO) throws UserException{
+    public JwtDTO signIn(@RequestBody SigninDTO signinDTO) throws UserException {
         return authService.doSignin(signinDTO);
     }
 
     @GetMapping("/current")
-    public UserDataDto getCurrentUserDetails(){
+    public UserDataDto getCurrentUserDetails() {
         return AuthHelper.getCurrentUserData();
     }
 
-    @PostMapping(value="/resetPassword",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/resetPassword", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String resetPassword(@RequestBody EmailDTO emailDTO) throws UserException {
         log.info("Received request to start reset password mechanism for user with email {}", emailDTO.getEmail());
         String parsedEmail = emailDTO.getEmail();
         User user = authService.findUserByEmail(parsedEmail);
 
         String token = UUID.randomUUID().toString();
-        PasswordResetToken resetToken =  authService.createPasswordResetTokenForUser(user, token);
+        PasswordResetToken resetToken = authService.createPasswordResetTokenForUser(user, token);
 
         String appURL = "http://localhost:8080/api/auth/user/forgot-password"; //request.getRequestURL().toString();
         log.info("Current app url is {}", appURL);
-        authService.notifyKafka(resetToken,parsedEmail,appURL);
+        authService.notifyKafka(resetToken, parsedEmail, appURL);
         return resetToken.getToken();
     }
 
     @GetMapping("/user/forgot-password")
-    public void validateToken(@RequestParam String token){
+    public void validateToken(@RequestParam String token) {
         log.info("Trying to validate token {}", token);
         boolean valid = authService.validatePasswordResetToken(token);
-        log.info("Token {} is valid: {}",token,valid);
+        log.info("Token {} is valid: {}", token, valid);
         PasswordResetToken passwordResetToken = authService.findTokenByToken(token);
-        if(passwordResetToken != null){
-            log.info("Updating token {} validity in database to {}",token,valid);
+        if (passwordResetToken != null) {
+            log.info("Updating token {} validity in database to {}", token, valid);
             passwordResetToken.setVerified(valid);
             authService.updateToken(passwordResetToken);
         }
@@ -77,7 +79,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/user/reset-password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void resetPasswordData(@RequestBody ResetPasswordDto resetPasswordDto) throws PasswordResetException, UserException {
-        log.info("Received request to reset password for {} ",resetPasswordDto.getEmail());
+        log.info("Received request to reset password for {} ", resetPasswordDto.getEmail());
         authService.changePassword(resetPasswordDto);
     }
 

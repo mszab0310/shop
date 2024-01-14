@@ -3,7 +3,6 @@ package com.mali.shop.service;
 import com.mali.shop.dto.BidDTO;
 import com.mali.shop.dto.ProductDTO;
 import com.mali.shop.dto.UserDataDto;
-import com.mali.shop.exceptions.PasswordResetException;
 import com.mali.shop.exceptions.ProductException;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.User;
@@ -54,7 +53,6 @@ public class ProductService {
         product.setListedAtDate(newProduct.getListedAt());
         product.setHighestBid(BigDecimal.valueOf(0));
         productRepository.save(product);
-
     }
 
     public List<ProductDTO> getAllProducts() {

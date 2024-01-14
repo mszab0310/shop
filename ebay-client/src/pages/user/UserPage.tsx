@@ -41,6 +41,7 @@ function UserPage() {
               {userdata?.firstname} {userdata?.lastName} {userdata?.id}
             </h1>
             <h1>{userdata?.email}</h1>
+            <h1>{userdata?.role == "ROLE_USER" ? "Student" : "Recruiter"}</h1>
           </div>
         ) : (
           <h1>Loading</h1>

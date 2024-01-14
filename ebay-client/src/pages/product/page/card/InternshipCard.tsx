@@ -7,18 +7,19 @@ import Typography from "@mui/material/Typography";
 import { Product } from "../../../../dto/ProductDTO";
 import { CardActionArea } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import "./ProductCard.css";
+import "./InternshipCard.css";
+import {NavigationRoutes} from "../../../../routes/ROUTES";
 
-export type ProductCardProps = {
-  product: Product;
+export type InternshipCardProps = {
+  internship: Product;
 };
 
-export default function ProductCard(props: ProductCardProps) {
-  const productImage = "https://source.unsplash.com/random/?" + props.product.name.split(" ")[0];
+export default function InternshipCard(props: InternshipCardProps) {
+  const productImage = "https://source.unsplash.com/random/?" + props.internship.name.split(" ")[0];
   const navigate = useNavigate();
 
   const onClickTitle = () => {
-    navigate("/product/" + `${props.product.name}`, { state: { id: props.product.id } });
+    navigate( NavigationRoutes.INTERNSHIP + "/" + `${props.internship.name}`, { state: { id: props.internship.id } });
   };
 
   return (
@@ -26,21 +27,21 @@ export default function ProductCard(props: ProductCardProps) {
       <CardActionArea>
         <CardMedia component="img" height="140" image={productImage} alt="product image" />
         <CardContent>
-          {props.product.isActive ? (
+          {props.internship.isActive ? (
             <Typography gutterBottom variant="h5" component="div">
-              {props.product.name}
+              {props.internship.name}
             </Typography>
           ) : (
             <Typography gutterBottom variant="h5" component="div">
-              {props.product.name} - No longer active
+              {props.internship.name} - No longer active
             </Typography>
           )}
 
           <Typography variant="body2" color="text.secondary">
-            {props.product.description}
+            {props.internship.description}
           </Typography>
-          <Typography>Starting at: {props.product.startingPrice}</Typography>
-          <Typography>Bidding closes on: {new Date(props.product.biddingClosesOn).toLocaleString()}</Typography>
+          <Typography>Starting at: {props.internship.startingPrice}</Typography>
+          <Typography>Bidding closes on: {new Date(props.internship.biddingClosesOn).toLocaleString()}</Typography>
         </CardContent>
         <CardActions>
           <Button size="small">Learn more</Button>

@@ -4,9 +4,9 @@ import LoginRenderer from "./util/LoginRenderer";
 import LoginPage from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import UserPage from "./pages/user/UserPage";
-import AddNewProduct from "./pages/product/add-new/AddNewProduct";
-import ProductsList from "./pages/product/page/list/ProductsList";
-import ProductPage from "./pages/product/page/product-specific/ProductPage";
+import AddNewInternship from "./pages/product/add-new/AddNewInternship";
+import InternshipList from "./pages/product/page/list/InternshipList";
+import InternshipPage from "./pages/product/page/product-specific/InternshipPage";
 import { useState } from "react";
 import { AppContext } from "./context/context";
 import ForgotPassword from "./pages/auth/ForgotPassword";
@@ -38,12 +38,12 @@ function App() {
           <Route path={NavigationRoutes.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={NavigationRoutes.LOGIN} element={<LoginPage />} />
           <Route path={NavigationRoutes.REGISTER} element={<Register />} />
-          <Route path={NavigationRoutes.PRODUCTS} element={<ProductsList />} />
+          <Route path={NavigationRoutes.INTERNSHIPS} element={<InternshipList />} />
           <Route element={<ProtectedRoutes />}>
-            <Route path={NavigationRoutes.PRODUCT}>
-              <Route path=":name" element={<ProductPage />} />
+            <Route path={NavigationRoutes.INTERNSHIP}>
+              <Route path=":name" element={<InternshipPage />} />
             </Route>
-            <Route path={NavigationRoutes.NEW_PRODUCT} element={<AddNewProduct />} />
+            <Route path={NavigationRoutes.NEW_INTERNSHIP} element={<AddNewInternship />} />
             <Route path={NavigationRoutes.USER} element={<UserPage />} />
           </Route>
         </Routes>

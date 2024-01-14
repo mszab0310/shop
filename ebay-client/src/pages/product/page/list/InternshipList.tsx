@@ -2,15 +2,15 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { Product } from "../../../../dto/ProductDTO";
 import { useEffect } from "react";
-import { getAllProducts } from "../../ProductApi";
-import ProductCard from "../card/ProductCard";
+import { getAllProducts } from "../../InternshipApi";
+import InternshipCard from "../card/InternshipCard";
 
-import "./ProductsList.css";
+import "./InternshipList.css";
 import Navbar from "../../../../components/Navbar";
 import { AppContext } from "src/context/context";
-import { getSearchResult } from "./../../ProductApi";
+import { getSearchResult } from "../../InternshipApi";
 
-function ProductsList() {
+function InternshipList() {
   const [productList, setProductList] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -56,7 +56,7 @@ function ProductsList() {
       {isLoading ? (
         <div className="productListContainer">
           {productList.map((product: Product) => {
-            return <ProductCard key={Math.random()} product={product} />;
+            return <InternshipCard key={Math.random()} internship={product} />;
           })}
         </div>
       ) : (
@@ -66,4 +66,4 @@ function ProductsList() {
   );
 }
 
-export default ProductsList;
+export default InternshipList;
