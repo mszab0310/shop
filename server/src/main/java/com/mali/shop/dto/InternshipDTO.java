@@ -6,16 +6,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class ProductDTO {
+public class InternshipDTO {
     private String name;
     private String description;
-    private String productCondition;
-    private BigDecimal startingPrice;
-    private BigDecimal highestBid;
+    private String companyName;
+    private Long openPositions;
     private Date listedAt;
-    private Date biddingClosesOn;
+    private Date activeUntil;
     private Boolean isActive;
-    private UserDataDto sellerData;
-    private Long bidderID;
+    private UserDataDto recruiterData;
+    private Long userID;
     private Long id;
 }

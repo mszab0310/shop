@@ -1,13 +1,13 @@
 package com.mali.shop.service;
 
 
-import com.mali.shop.dto.ProductDTO;
+import com.mali.shop.dto.InternshipDTO;
 import com.mali.shop.dto.UserDataDto;
 import com.mali.shop.exceptions.UserException;
 import com.mali.shop.model.User;
-import com.mali.shop.model.product.Product;
-import com.mali.shop.repository.ProductRepository;
-import com.mali.shop.repository.UserProductBidsRepository;
+import com.mali.shop.model.product.Internship;
+import com.mali.shop.repository.InternshipRepository;
+import com.mali.shop.repository.UserInternshipAppliesRepository;
 import com.mali.shop.repository.UserRepository;
 import com.mali.shop.util.ShopUserDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -27,46 +27,22 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserProductBidsRepository userProductBidsRepository;
+    private UserInternshipAppliesRepository userInternshipAppliesRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private InternshipRepository internshipRepository;
 
 
-    public List<ProductDTO> getProductsForUser() throws UserException {
+    public List<InternshipDTO> getInternshipsForUser() throws UserException {
         User user = userRepository.findUserById(getCurrentUserID()).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
-        List<Product> products = productRepository.findProductBySeller_id(user.getId());
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        products.forEach(product -> {
-            try {
-                if (product.getBiddingClosesOn().before(new Date())) {
-                    product.setActive(false);
-                    productRepository.save(product);
-                }
-                productDTOS.add(daoToDTO(product));
-            } catch (UserException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        return productDTOS;
+        List<Internship> internships = internshipRepository.findByRecruiter_id(user.getId());
+        return getInternshipDTOS(internships);
     }
 
-    public List<ProductDTO> getBiddedProductsForUser() throws UserException {
+    public List<InternshipDTO> getAppliedInternshipsForUser() throws UserException {
         User user = userRepository.findUserById(getCurrentUserID()).orElseThrow(() -> new UserException(UserException.USER_NOT_FOUND));
-        List<Product> products = userProductBidsRepository.findAllProductsByUser(user);
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        products.forEach(product -> {
-            try {
-                if (product.getBiddingClosesOn().before(new Date())) {
-                    product.setActive(false);
-                    productRepository.save(product);
-                }
-                productDTOS.add(daoToDTO(product));
-            } catch (UserException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        return productDTOS;
+        List<Internship> internships = userInternshipAppliesRepository.findAllInternshipsByUser(user);
+        return getInternshipDTOS(internships);
     }
 
     private Long getCurrentUserID() {
@@ -75,21 +51,34 @@ public class UserService {
         return currentUserDetails.getId();
     }
 
-    private ProductDTO daoToDTO(Product product) throws UserException {
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setName(product.getName());
-        productDTO.setDescription(product.getDescription());
-        productDTO.setProductCondition(product.getProductCondition());
-        productDTO.setStartingPrice(product.getStartingPrice());
-        productDTO.setHighestBid(product.getHighestBid());
-        productDTO.setListedAt(product.getListedAtDate());
-        productDTO.setBiddingClosesOn(product.getBiddingClosesOn());
-        productDTO.setIsActive(product.isActive());
-        productDTO.setSellerData(getSellerData(product.getSeller_id()));
-        if (productDTO.getBidderID() != null)
-            productDTO.setBidderID(productDTO.getBidderID());
-        productDTO.setId(product.getProductId());
-        return productDTO;
+    private List<InternshipDTO> getInternshipDTOS(List<Internship> internships) {
+        List<InternshipDTO> internshipDTOS = new ArrayList<>();
+        internships.forEach(internship -> {
+            try {
+                if (internship.getActiveUntil().before(new Date())) {
+                    internship.setActive(false);
+                    internshipRepository.save(internship);
+                }
+                internshipDTOS.add(daoToDTO(internship));
+            } catch (UserException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return internshipDTOS;
+    }
+
+    private InternshipDTO daoToDTO(Internship internship) throws UserException {
+        InternshipDTO internshipDTO = new InternshipDTO();
+        internshipDTO.setName(internship.getName());
+        internshipDTO.setDescription(internship.getDescription());
+        internshipDTO.setCompanyName(internship.getCompanyName());
+        internshipDTO.setOpenPositions(internship.getOpenPositions());
+        internshipDTO.setListedAt(internship.getListedAtDate());
+        internshipDTO.setActiveUntil(internship.getActiveUntil());
+        internshipDTO.setIsActive(internship.isActive());
+        internshipDTO.setRecruiterData(getSellerData(internship.getRecruiter_id()));
+        internshipDTO.setId(internship.getInternshipId());
+        return internshipDTO;
     }
 
     private UserDataDto getSellerData(Long id) throws UserException {

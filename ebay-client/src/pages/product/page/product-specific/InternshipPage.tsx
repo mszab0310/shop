@@ -179,7 +179,7 @@ function InternshipPage() {
                                     Delete Listing
                                 </Button>
                             )}
-                            <span>Starting price: {product.startingPrice}</span>
+                            <span>Open positions: {product.startingPrice}</span>
                             <Button disabled={!product.isActive} onClick={startApplying} variant="contained"
                                     sx={{mt: 3, mb: 2}}>
                                 Apply to this internship

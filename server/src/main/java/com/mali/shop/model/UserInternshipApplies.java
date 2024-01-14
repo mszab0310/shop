@@ -1,6 +1,6 @@
 package com.mali.shop.model;
 
-import com.mali.shop.model.product.Product;
+import com.mali.shop.model.product.Internship;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-public class UserProductBids {
+public class UserInternshipApplies {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,8 +19,8 @@ public class UserProductBids {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "internship_id")
+    private Internship internship;
 
 
 }

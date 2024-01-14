@@ -25,7 +25,7 @@ export default function InternshipCard(props: InternshipCardProps) {
   return (
     <Card sx={{ minWitdh: "80%", margin: "auto" }} className="productCard" onClick={onClickTitle}>
       <CardActionArea>
-        <CardMedia component="img" height="140" image={productImage} alt="product image" />
+        <CardMedia component="img" height="140" image={productImage} alt="internship image" />
         <CardContent>
           {props.internship.isActive ? (
             <Typography gutterBottom variant="h5" component="div">
@@ -40,8 +40,8 @@ export default function InternshipCard(props: InternshipCardProps) {
           <Typography variant="body2" color="text.secondary">
             {props.internship.description}
           </Typography>
-          <Typography>Starting at: {props.internship.startingPrice}</Typography>
-          <Typography>Bidding closes on: {new Date(props.internship.biddingClosesOn).toLocaleString()}</Typography>
+          <Typography>Open positions: {props.internship.startingPrice}</Typography>
+          <Typography>Apply until: {new Date(props.internship.biddingClosesOn).toLocaleString()}</Typography>
         </CardContent>
         <CardActions>
           <Button size="small">Learn more</Button>
