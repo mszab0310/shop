@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useState } from "react";
-import { Product } from "../../../../dto/ProductDTO";
+import { Internship } from "../../../../dto/InternshipDTO";
 import { useEffect } from "react";
 import { getAllProducts } from "../../InternshipApi";
 import InternshipCard from "../card/InternshipCard";
@@ -11,13 +11,13 @@ import { AppContext } from "src/context/context";
 import { getSearchResult } from "../../InternshipApi";
 
 function InternshipList() {
-  const [productList, setProductList] = useState<Product[]>([]);
+  const [productList, setProductList] = useState<Internship[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { searchQuery } = useContext(AppContext);
 
   useEffect(() => {
-    const products: Product[] = [];
+    const products: Internship[] = [];
     if (searchQuery === "") {
       getAllProducts().then((response: any) => {
         response.data.forEach((element: any) => {
@@ -38,7 +38,7 @@ function InternshipList() {
   }, []);
 
   useEffect(() => {
-    const products: Product[] = [];
+    const products: Internship[] = [];
 
     console.log("Query is " + searchQuery);
     getSearchResult(searchQuery).then((response: any) => {
@@ -55,7 +55,7 @@ function InternshipList() {
       <Navbar />
       {isLoading ? (
         <div className="productListContainer">
-          {productList.map((product: Product) => {
+          {productList.map((product: Internship) => {
             return <InternshipCard key={Math.random()} internship={product} />;
           })}
         </div>

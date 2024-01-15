@@ -6,15 +6,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Product } from "src/dto/ProductDTO";
+import { Internship } from "../../dto/InternshipDTO";
 import { useNavigate } from "react-router-dom";
 
-function createData(id: number, name: string, price: number, isActive: boolean, isSold: boolean) {
-  return { id, name, price, isActive, isSold };
+function createData(id: number, name: string, positions: number, isActive: boolean) {
+  return { id, name, positions, isActive };
 }
 
 export type DataTableProps = {
-  products: Product[];
+  internships: Internship[];
   bid?: boolean;
   uid?: number;
 };
@@ -23,14 +23,14 @@ export default function DataTable(props: DataTableProps) {
   const navigate = useNavigate();
   const rows: any[] = [];
 
-  props.products.forEach((product) => {
+  props.internships.forEach((internship) => {
     let sold;
     if (props.bid === false) {
-      sold = !product.isActive && product.bidderId !== null;
+      sold = !internship.isActive && internship.userID !== null;
     } else {
-      sold = props.uid === product.bidderId;
+      sold = props.uid === internship.userID;
     }
-    rows.push(createData(product.id, product.name, product.startingPrice, product.isActive, sold));
+    rows.push(createData(internship.id, internship.name, internship.openPositions, internship.isActive));
   });
 
   const viewProductPage = (id: number, name: string) => {
@@ -44,9 +44,8 @@ export default function DataTable(props: DataTableProps) {
           <TableRow>
             <TableCell>Your listings</TableCell>
             <TableCell align="right">Name</TableCell>
-            <TableCell align="right">Starting price</TableCell>
+            <TableCell align="right">Open Positions</TableCell>
             <TableCell align="right">Active</TableCell>
-            <TableCell align="right">{props.bid === true ? "Won" : "Sold"}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -56,9 +55,8 @@ export default function DataTable(props: DataTableProps) {
                 {row.id}
               </TableCell>
               <TableCell align="right">{row.name}</TableCell>
-              <TableCell align="right">{row.price}</TableCell>
+              <TableCell align="right">{row.positions}</TableCell>
               <TableCell align="right">{row.isActive.toString()}</TableCell>
-              <TableCell align="right">{row.isSold.toString()}</TableCell>
             </TableRow>
           ))}
         </TableBody>

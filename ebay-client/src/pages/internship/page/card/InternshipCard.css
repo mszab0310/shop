@@ -1,10 +1,11 @@
 .productCard {
-  margin-top: 18pt;
+  /*margin-top: 18pt;*/
   padding: 7px; /* JUST TO LOOK COOL */
   border: 1px solid #eee; /* JUST TO LOOK COOL */
   box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px;
   transition: all 0.3s ease-in-out;
-  max-width: 60%;
+  width: 500px;
+  margin: 5px;
 }
 
 .productCard:hover {

@@ -1,13 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import Navbar from "src/components/Navbar";
-import {Product} from "src/dto/ProductDTO";
-import {Bid} from "src/dto/BidDto";
-import {deleteProduct, getBidForProduct, getProductById} from "../../InternshipApi";
+import {Internship} from "../../../../dto/InternshipDTO";
+import {deleteProduct, getProductById} from "../../InternshipApi";
 import "./InternshipPage.css";
 import {NavigationRoutes} from "src/routes/ROUTES";
 import {AlertColor, Button, CircularProgress} from "@mui/material";
-import {submitBidForProduct} from "../../InternshipApi";
 import {Client} from "@stomp/stompjs";
 import {getCurrentUser} from "src/pages/user/userApi";
 import {UserData} from "src/dto/UserData";
@@ -16,12 +14,9 @@ function InternshipPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [product, setProduct] = useState<Product | null>(null);
+    const [product, setProduct] = useState<Internship | null>(null);
     const [imageUrl, setImageUrl] = useState<string>("");
-    const [wantToBid, setWantToBid] = useState<boolean>(false);
     const [wantToApply, setWantToApply] = useState<boolean>(false);
-    const [bid, setBid] = useState<number>(0);
-    const [currentBid, setCurrentBid] = useState<number>(0);
     const [requestStatusMessage, setRequestStatusMessage] = useState<string>("");
     const [status, setStatus] = useState<AlertColor>("success");
     const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -47,91 +42,18 @@ function InternshipPage() {
                 navigate(NavigationRoutes.INTERNSHIPS);
             });
 
-        getBidForProduct(location.state.id)
-            .then((response) => {
-                setCurrentBid(response.data);
-            })
-            .catch((err) => {
-                console.log(err);
-                setCurrentBid(0);
-            });
-
-        clientRef.current = new Client({
-            brokerURL: SOCKET_URL,
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            onConnect: onConnected,
-            onDisconnect: onDisconnected,
-        });
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (userdata !== null && product !== null) if (userdata?.id === product!.sellerData!.id) setIsOwnProduct(true);
+        if (userdata !== null && product !== null) if (userdata?.id === product!.userID) setIsOwnProduct(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userdata, product]);
 
-    const enterBiddingButton = () => {
-        setWantToBid(true);
-        clientRef.current!.activate();
-    };
 
     const startApplying = () => {
         setWantToApply(true);
     }
-
-    const getBid = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setBid(+event.target.value);
-    };
-
-    const submitBid = () => {
-        console.log("Check: ");
-        console.log(userdata);
-        console.log(product?.sellerData);
-        if (userdata!.id === product!.sellerData!.id) {
-            setRequestStatusMessage("Cannot bid on own product");
-            setStatus("error");
-            setShowAlert(true);
-        } else {
-            if (bid > product!.highestBid && bid > product!.startingPrice) {
-                const bidObj: Bid = {bid: bid, productId: location.state.id};
-                console.log(bid);
-                clientRef.current?.publish({
-                    destination: "/product_update/" + location.state.id,
-                    body: JSON.stringify(bidObj)
-                });
-                submitBidForProduct(bidObj)
-                    .then(() => {
-                        setRequestStatusMessage("Bid submitted successfully");
-                        setStatus("success");
-                        setShowAlert(true);
-                    })
-                    .catch((err: any) => {
-                        setRequestStatusMessage("Bid failed: " + err.response.data.message);
-                        setStatus("error");
-                        setShowAlert(true);
-                    });
-            } else {
-                setBid(0);
-                setRequestStatusMessage("Please enter a bid bigger than the curren bid");
-                setCurrentBid(product!.highestBid);
-                setStatus("error");
-                setShowAlert(true);
-            }
-        }
-    };
-
-    const onConnected = () => {
-        console.log("Connected!!");
-        clientRef.current?.subscribe(`/product_update/${location.state.id}`, (msg) => {
-            if (msg.body) {
-                console.log("Price:" + JSON.parse(msg.body).bid);
-                setCurrentBid(JSON.parse(msg.body).bid);
-            }
-        });
-    };
 
     const onDisconnected = () => {
         console.log("Disconnected!!");
@@ -169,7 +91,7 @@ function InternshipPage() {
                                 <img src={imageUrl} alt="img" className="productImage"/>
                             </div>
                             {product.isActive === true ? (
-                                <p>Active until {new Date(product.biddingClosesOn).toLocaleString()}</p>
+                                <p>Active until {new Date(product.activeUntil).toLocaleString()}</p>
                             ) : (
                                 <h1>The listing is no longer active</h1>
                             )}
@@ -179,7 +101,7 @@ function InternshipPage() {
                                     Delete Listing
                                 </Button>
                             )}
-                            <span>Open positions: {product.startingPrice}</span>
+                            <span>Open positions: {product.openPositions}</span>
                             <Button disabled={!product.isActive} onClick={startApplying} variant="contained"
                                     sx={{mt: 3, mb: 2}}>
                                 Apply to this internship

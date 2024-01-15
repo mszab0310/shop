@@ -4,14 +4,14 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Product } from "../../../../dto/ProductDTO";
+import { Internship } from "../../../../dto/InternshipDTO";
 import { CardActionArea } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./InternshipCard.css";
 import {NavigationRoutes} from "../../../../routes/ROUTES";
 
 export type InternshipCardProps = {
-  internship: Product;
+  internship: Internship;
 };
 
 export default function InternshipCard(props: InternshipCardProps) {
@@ -40,8 +40,8 @@ export default function InternshipCard(props: InternshipCardProps) {
           <Typography variant="body2" color="text.secondary">
             {props.internship.description}
           </Typography>
-          <Typography>Open positions: {props.internship.startingPrice}</Typography>
-          <Typography>Apply until: {new Date(props.internship.biddingClosesOn).toLocaleString()}</Typography>
+          <Typography>Open positions: {props.internship.openPositions}</Typography>
+          <Typography>Apply until: {new Date(props.internship.activeUntil).toLocaleString()}</Typography>
         </CardContent>
         <CardActions>
           <Button size="small">Learn more</Button>

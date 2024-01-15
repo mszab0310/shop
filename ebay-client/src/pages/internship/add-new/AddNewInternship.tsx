@@ -1,12 +1,10 @@
 import {Alert, AlertColor, Box, Button, Grid, SelectChangeEvent, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import Navbar from "src/components/Navbar";
-import {addNewProduct, getProductConditions} from "../InternshipApi";
+import {addNewProduct} from "../InternshipApi";
 import "./AddNewInternship.css";
 
 function AddNewInternship() {
-    const [productCondition, setProductCondition] = useState<string[]>([]);
-    const [selectedProductCondition, setSelectedProductCondition] = useState<string>("");
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [requestStatusMessage, setRequestStatusMessage] = useState<string>("");
     const [status, setStatus] = useState<AlertColor>("success");
@@ -17,18 +15,18 @@ function AddNewInternship() {
         const formData = new FormData(event.currentTarget);
         const name = formData.get("internshipName");
         const description = formData.get("internshipDescription");
-        const price = formData.get("internshipPositions");
+        const internshipPositions = formData.get("internshipPositions");
         const product = {
             name: name as string,
             description: description as string,
-            productCondition: selectedProductCondition,
-            startingPrice: +price!,
-            highestBid: 0,
+            companyName: "",
+            openPositions: +internshipPositions!,
             listedAt: new Date(Date.now()),
-            biddingClosesOn: new Date(selectedDate!),
+            activeUntil: new Date(selectedDate!),
             isActive: true,
-            sellerData: null,
+            recruiterData: null,
             id: -1,
+            userID: null
         };
         addNewProduct(product)
             .then(() => {
@@ -41,20 +39,6 @@ function AddNewInternship() {
                 setStatus("error");
                 setShowAlert(true);
             });
-    };
-
-    useEffect(() => {
-        getProductConditions()
-            .then((resp) => {
-                setProductCondition(resp.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
-
-    const handleProductCondition = (event: SelectChangeEvent) => {
-        setSelectedProductCondition(event.target.value as string);
     };
 
     const handleDateChange = (event: any) => {
