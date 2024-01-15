@@ -23,12 +23,12 @@ export default function InternshipCard(props: InternshipCardProps) {
   };
 
   return (
-    <Card sx={{ minWitdh: "80%", margin: "auto" }} className="productCard" onClick={onClickTitle}>
+    <Card sx={{ width: "300px", margin: "auto" }} className="productCard" onClick={onClickTitle}>
       <CardActionArea>
-        <CardMedia component="img" height="140" image={productImage} alt="internship image" />
+        <CardMedia component="img" height="250" width={300} image={productImage} alt="internship image" sx={{maxWidth: "300px", borderRadius: 1}}/>
         <CardContent>
           {props.internship.isActive ? (
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography gutterBottom variant="h5" component="div" sx={{fontWeight: 700}}>
               {props.internship.name}
             </Typography>
           ) : (
@@ -37,14 +37,14 @@ export default function InternshipCard(props: InternshipCardProps) {
             </Typography>
           )}
 
-          <Typography variant="body2" color="text.secondary">
+          <Typography gutterBottom variant="body2" color="text.secondary">
             {props.internship.description}
           </Typography>
-          <Typography>Open positions: {props.internship.openPositions}</Typography>
-          <Typography>Apply until: {new Date(props.internship.activeUntil).toLocaleString()}</Typography>
+          <Typography sx={{fontWeight: 600, display: "flex", gap: 1}}>Open positions: <Typography  sx={{color: "red", fontWeight: 700}}>{props.internship.openPositions}</Typography></Typography>
+          <Typography  sx={{fontWeight: 600, display: "flex", gap: 1}}>Apply until: <Typography  >{new Date(props.internship.activeUntil).toLocaleString()}</Typography></Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn more</Button>
+          <Button variant="contained" color="secondary" size="medium">Learn more</Button>
         </CardActions>
       </CardActionArea>
     </Card>
