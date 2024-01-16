@@ -1,6 +1,91 @@
-.newProductPage {
+.info-new {
+  display: flex
+}
+
+.actions-new {
+  display: flex;
+  justify-content: start;
+  gap: 3em;
+  width: 450px;
+
+}
+
+.image-new {
+  width: 450px;
+  height: 400px;
+  background-image: url("https://source.unsplash.com/random/450x400");
+  border-radius: 0.5em;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.new-internship-data{
+ 
   display: flex;
   flex-direction: column;
+  gap: 1em;
   align-items: center;
-  justify-content: center;
+}
+
+.info-new {
+  width: 75%;
+  display: flex;
+  justify-content: space-between;
+  gap: 4em
+}
+
+.info-left-new {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.date-new {
+  width: 450px;
+}
+
+.description-new {
+  width: 600px;
+}
+
+.title-new {
+  width: 75%;
+}
+
+@media (min-width: 1024px) {
+  .info-new {
+    flex-direction: row;
+  }
+}
+
+
+@media (max-width: 1250px) {
+  .info-new {
+    
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2em;
+  }
+
+  .image-new {
+    width: 100%;
+  }
+
+  .actions-new {
+    width: 100%;
+  }
+
+  .date-new {
+    width: 100%;
+  }
+
+  .description-new {
+    width: 100%;
+  }
+
+  .title-new {
+    width: 100%;
+  }
+
 }

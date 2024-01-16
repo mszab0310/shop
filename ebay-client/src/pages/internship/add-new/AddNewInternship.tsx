@@ -48,51 +48,64 @@ function AddNewInternship() {
     return (
         <>
             <Navbar/>
-            <div className="newProductPage">
+            
                 <Box component="form" onSubmit={saveListing} noValidate
-                     sx={{mt: 4, display: "flex", flexDirection: "column", justifyContent: "center"}}>
-                    <Grid container spacing={2}
-                          sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
-                        <Grid item xs={12}>
-                            <TextField hiddenLabel name="internshipName" label="Internship name" id="internshipName"
-                                       variant="filled" size="small"/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField id="internshipDescription" label="Description" name="internshipDescription"
-                                       multiline rows={4} variant="filled"/>
-                        </Grid>
-                        <Grid item xs={18}>
-                            <TextField
-                                inputProps={{inputMode: "numeric", pattern: "[0-9]*"}}
-                                id="internshipPositions"
-                                label="Positions"
-                                variant="filled"
-                                name="internshipPositions"
-                            />
-                        </Grid>
-                        <Grid container spacing={2} sx={{mt: 1, justifyContent: "space-between"}}>
-                            <Grid item xs={12} sm={2}>
-                                <TextField
-                                    type="datetime-local"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    label="Applications open until"
-                                    onChange={handleDateChange}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button type="submit" variant="contained" sx={{mt: 3, mb: 2}}>
-                                Add listing
-                            </Button>
-                            {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}
-                        </Grid>
-                    </Grid>
-                </Box>
+                     sx={{mt: 2, ml: "0.5em", mr: "0.5em" }}>
+                
+                
+                <div className="new-internship-data">
+                <TextField className="title-new" hiddenLabel name="internshipName" label="Internship Title" id="internshipName"
+                                       variant="outlined" size="small"/>
+    <div className="info-new">
+    <div className="info-left-new">
+    <div className="image-new"></div>
+      
+
+       <TextField
+       className="date-new"
+           type="datetime-local"
+           InputLabelProps={{
+               shrink: true,
+           }}
+           label="Applications open until"
+           onChange={handleDateChange}
+       />
+
+           <div className="actions-new">   
+           
+            <TextField
+            sx={{width: "215px"}}
+       inputProps={{inputMode: "numeric", pattern: "[0-9]*"}}
+       id="internshipPositions"
+       label="Positions"
+       variant="outlined"
+       name="internshipPositions"
+        />
+
+       <Button type="submit" variant="contained" sx={{width: "215px"}}>
+        Add listing
+            </Button>
+           
+            
             </div>
+            <div className=""> {showAlert ? <Alert severity={status}>{requestStatusMessage}</Alert> : <></>}</div>
+         </div>
+         <div className="info-right-new">
+            <TextField id="internshipDescription" label="Description" name="internshipDescription"
+    multiline rows={22} variant="outlined" className="description-new"/>
+    </div>
+ 
+
+                </div>
+                  
+                      </div>
+    
+                </Box>
+          
         </>
     );
 }
 
 export default AddNewInternship;
+
+
